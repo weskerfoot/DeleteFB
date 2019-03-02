@@ -21,3 +21,10 @@ Use your native package manager
 
 ### Windows
 See [this link](https://www.howtogeek.com/197947/how-to-install-python-on-windows/), but I make no guarantees that Selenium will actually work as I have not tested it.
+
+
+### Bugs
+
+If it stops working or otherwise crashes, delete the latest post manually and
+start it again after waiting a minute. I make no guarantees that it will work
+perfectly for every profile.
