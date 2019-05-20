@@ -10,6 +10,13 @@ As for why you would want to do this in the first place. That is up to you.
 Personally I wanted a way to delete most of my content on Facebook without
 deleting my account.
 
+## Will this *really* delete posts?
+I can make no guarantees that Facebook doesn't store the data somewhere forever
+in cold storage. However this tool is intended more as a way to clean up your
+online presence and not have to worry about what you wrote from years ago.
+Personally, I did this so I would feel less attached to my Facebook profile
+(and hence feel the need to use it less).
+
 ## How To Use
 
 * Make sure that you have Google Chrome installed and that it is up to date, as
