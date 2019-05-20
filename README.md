@@ -2,11 +2,8 @@
 
 * Make sure that you have Google Chrome installed and that it is up to date
 * Install python 3.x (tested on python 3.7) along with pip
-* `virtualenv -p $(which python3) ./venv`
-* `source venv/bin/activate`
-* `pip3 install -r requirements.txt`
-* Edit `deletefb.py` to include your email, password, and profile URL.
-* Run `python3 deletefb.py` with your virtual environment activated.
+* `pip3 install --user delete-facebook-posts`
+* Run `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"
 * Wait a long time
 * Say goodbye to your Facebook posts!
 

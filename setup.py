@@ -14,9 +14,9 @@ setuptools.setup(
     url="https://github.com/weskerfoot/DeleteFB",
     packages=setuptools.find_packages(),
     install_requires = [
-        "selenium>=3.141.0",
-        "selenium-requests>=1.3",
-        "requests>=2.21.0"
+        "selenium",
+        "selenium-requests",
+        "requests"
     ],
     classifiers= [
         "Programming Language :: Python :: 3",
@@ -25,7 +25,7 @@ setuptools.setup(
     ],
     entry_points = {
         "console_scripts" : [
-            "deletefb = deletefb:run_delete"
+            "deletefb = deletefb.deletefb:run_delete"
         ]
     }
 )
