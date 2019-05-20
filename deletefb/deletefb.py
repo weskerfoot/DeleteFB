@@ -3,6 +3,10 @@
 from seleniumrequests import Chrome
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+
 import time
 import argparse
 
@@ -79,10 +83,15 @@ def delete_posts(user_email_address=None,
         timeline_element = driver.find_element_by_class_name(post_button_sel)
         actions = ActionChains(driver)
         actions.move_to_element(timeline_element).click().perform()
-        time.sleep(5)
 
-        menu = driver.find_element_by_css_selector("#globalContainer > div.uiContextualLayerPositioner.uiLayer > div")
+        menu_selector = "#globalContainer > div.uiContextualLayerPositioner.uiLayer > div"
+
+        #time.sleep(3)
+
+        menu = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, menu_selector)))
+
         actions.move_to_element(menu).perform()
+
         try:
             delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"FeedDeleteOption\"]")
         except:
