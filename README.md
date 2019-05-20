@@ -1,11 +1,13 @@
 ## How To Use
 
 * Make sure that you have Google Chrome installed and that it is up to date
-* Install python 3.x (tested on python 3.7) along with pip
 * `pip3 install --user delete-facebook-posts`
-* Run `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"`
-* Wait a long time
-* Say goodbye to your Facebook posts!
+* `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"`
+* The script will log into your Facebook account, go to your profile page, and
+  start deleting posts. If it cannot delete something, then it will "hide" it
+  from your timeline instead.
+* Be patient as it will take a very long time, but it will eventually clear
+  everything. You may safely minimize the chrome window without breaking it.
 
 ## How To Install Python
 
@@ -24,4 +26,4 @@ See [this link](https://www.howtogeek.com/197947/how-to-install-python-on-window
 
 If it stops working or otherwise crashes, delete the latest post manually and
 start it again after waiting a minute. I make no guarantees that it will work
-perfectly for every profile.
+perfectly for every profile. Please file an issue if you run into any problems.
