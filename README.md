@@ -3,7 +3,7 @@
 * Make sure that you have Google Chrome installed and that it is up to date
 * Install python 3.x (tested on python 3.7) along with pip
 * `pip3 install --user delete-facebook-posts`
-* Run `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"
+* Run `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"`
 * Wait a long time
 * Say goodbye to your Facebook posts!
 
