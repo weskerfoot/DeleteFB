@@ -78,7 +78,6 @@ def delete_posts(user_email_address,
     if is_headless:
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('log-level=2')
 
     driver = Chrome(options=chrome_options)
