@@ -77,7 +77,7 @@ def delete_posts(user_email_address=None,
         # Allow time to enter 2FA code
         print("Pausing to enter 2FA code")
         time.sleep(20)
-        print("Continuin execution")
+        print("Continuing execution")
     driver.get(user_profile_url)
 
     for _ in range(MAX_POSTS):
