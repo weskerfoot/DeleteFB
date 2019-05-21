@@ -25,7 +25,7 @@ def run_delete():
     parser.add_argument(
         "-P",
         "--password",
-        required=True,
+        required=False,
         dest="password",
         type=str,
         help="Your Facebook password"
@@ -51,9 +51,14 @@ def run_delete():
 
     args = parser.parse_args()
 
+    if args.password is not None or not args.password:
+        args_user_password = args.password
+    else:
+        args_user_password = input('Enter your password: ')
+
     delete_posts(
         user_email_address=args.email,
-        user_password=args.password,
+        user_password=args_user_password,
         user_profile_url=args.profile_url,
         is_headless=args.is_headless
     )
