@@ -51,10 +51,7 @@ def run_delete():
 
     args = parser.parse_args()
 
-    if args.password is not None or not args.password:
-        args_user_password = args.password
-    else:
-        args_user_password = input('Enter your password: ')
+    args_user_password = args.password or input('Enter your password: ')
 
     delete_posts(
         user_email_address=args.email,
