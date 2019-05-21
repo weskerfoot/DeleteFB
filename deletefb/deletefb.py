@@ -73,6 +73,11 @@ def delete_posts(user_email_address=None,
     loginelement = driver.find_element_by_id(login)
 
     loginelement.click()
+    if "Two-factor authentication" in driver.page_source:
+        # Allow time to enter 2FA code
+        print("Pausing to enter 2FA code")
+        time.sleep(20)
+        print("Continuin execution")
     driver.get(user_profile_url)
 
     for _ in range(MAX_POSTS):

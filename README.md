@@ -29,6 +29,10 @@ Personally, I did this so I would feel less attached to my Facebook profile
 * Be patient as it will take a very long time, but it will eventually clear
   everything. You may safely minimize the chrome window without breaking it.
 
+## 2FA
+* If you have 2-Factor Auth configured then the script will pause for 20
+  seconds to allow you to enter your code and log in.
+
 ## How To Install Python
 
 ### MacOS
