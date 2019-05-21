@@ -3,12 +3,10 @@
 from seleniumrequests import Chrome
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-
 import time
 import argparse
+
+MAX_POSTS = 5000
 
 def run_delete():
     parser = argparse.ArgumentParser()
@@ -55,6 +53,7 @@ def delete_posts(user_email_address=None,
     chrome_options.add_argument("start-maximized")
 
     driver = Chrome(chrome_options=chrome_options)
+    driver.implicitly_wait(10)
 
     driver.get("https://facebook.com")
 
@@ -73,25 +72,16 @@ def delete_posts(user_email_address=None,
     loginelement = driver.find_element_by_id(login)
 
     loginelement.click()
-    time.sleep(3)
-
     driver.get(user_profile_url)
-    time.sleep(3)
 
-    for _ in range(5100):
+    for _ in range(MAX_POSTS):
         post_button_sel = "_4xev"
         timeline_element = driver.find_element_by_class_name(post_button_sel)
         actions = ActionChains(driver)
         actions.move_to_element(timeline_element).click().perform()
 
-        menu_selector = "#globalContainer > div.uiContextualLayerPositioner.uiLayer > div"
-
-        #time.sleep(3)
-
-        menu = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, menu_selector)))
-
+        menu = driver.find_element_by_css_selector("#globalContainer > div.uiContextualLayerPositioner.uiLayer > div")
         actions.move_to_element(menu).perform()
-
         try:
             delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"FeedDeleteOption\"]")
         except:
@@ -99,9 +89,7 @@ def delete_posts(user_email_address=None,
 
         actions.move_to_element(delete_button).click().perform()
 
-        time.sleep(4)
-
         confirmation_button = driver.find_element_by_class_name("layerConfirm")
         driver.execute_script("arguments[0].click();", confirmation_button)
-        time.sleep(3)
+        time.sleep(5)
         driver.refresh()
