@@ -33,6 +33,10 @@ Personally, I did this so I would feel less attached to my Facebook profile
 * If you have 2-Factor Auth configured then the script will pause for 20
   seconds to allow you to enter your code and log in.
 
+## Headless mode
+* The tool supports running Chrome in headless mode with the `--headless`
+  option, which may be preferable if you plan on running it in the background.
+
 ## How To Install Python
 
 ### MacOS
