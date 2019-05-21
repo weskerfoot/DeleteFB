@@ -2,6 +2,7 @@
 
 import argparse
 import time
+import getpass
 
 from seleniumrequests import Chrome
 from selenium.webdriver.common.action_chains import ActionChains
@@ -51,7 +52,7 @@ def run_delete():
 
     args = parser.parse_args()
 
-    args_user_password = args.password or input('Enter your password: ')
+    args_user_password = args.password or getpass.getpass('Enter your password: ')
 
     delete_posts(
         user_email_address=args.email,
