@@ -19,8 +19,8 @@ Personally, I did this so I would feel less attached to my Facebook profile
 
 ## How To Use
 
-* Make sure that you have Google Chrome installed and that it is up to date, as
-  well as the chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/downloads). On Arch Linux you can find this in the `chromium` package, but it will vary by OS.
+* Make sure that you have Google Chrome installed and that it is up to date
+* Also install the chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/downloads). On Arch Linux you can find this in the `chromium` package, and on Ubuntu it is `chromium-chromedriver`.
 * `pip3 install --user delete-facebook-posts`
 * `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"`
 * The script will log into your Facebook account, go to your profile page, and
