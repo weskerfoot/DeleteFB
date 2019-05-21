@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.options import Options
 import time
 import argparse
 
+MAX_POSTS = 5000
+
 def run_delete():
     parser = argparse.ArgumentParser()
     parser.add_argument("-E",
@@ -51,6 +53,7 @@ def delete_posts(user_email_address=None,
     chrome_options.add_argument("start-maximized")
 
     driver = Chrome(chrome_options=chrome_options)
+    driver.implicitly_wait(10)
 
     driver.get("https://facebook.com")
 
@@ -69,17 +72,13 @@ def delete_posts(user_email_address=None,
     loginelement = driver.find_element_by_id(login)
 
     loginelement.click()
-    time.sleep(3)
-
     driver.get(user_profile_url)
-    time.sleep(3)
 
-    for _ in range(5100):
+    for _ in range(MAX_POSTS):
         post_button_sel = "_4xev"
         timeline_element = driver.find_element_by_class_name(post_button_sel)
         actions = ActionChains(driver)
         actions.move_to_element(timeline_element).click().perform()
-        time.sleep(5)
 
         menu = driver.find_element_by_css_selector("#globalContainer > div.uiContextualLayerPositioner.uiLayer > div")
         actions.move_to_element(menu).perform()
@@ -90,9 +89,7 @@ def delete_posts(user_email_address=None,
 
         actions.move_to_element(delete_button).click().perform()
 
-        time.sleep(4)
-
         confirmation_button = driver.find_element_by_class_name("layerConfirm")
         driver.execute_script("arguments[0].click();", confirmation_button)
-        time.sleep(3)
+        time.sleep(5)
         driver.refresh()
