@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
 MAX_POSTS = 5000
+SELENIUM_EXCEPTIONS = (NoSuchElementException, StaleElementReferenceException)
 
 def run_delete():
     parser = argparse.ArgumentParser()
@@ -116,7 +117,7 @@ def delete_posts(user_email_address,
 
                 try:
                     delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"FeedDeleteOption\"]")
-                except (NoSuchElementException, StaleElementReferenceException):
+                except SELENIUM_EXCEPTIONS:
                     delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"HIDE_FROM_TIMELINE\"]")
 
                 actions.move_to_element(delete_button).click().perform()
@@ -124,7 +125,7 @@ def delete_posts(user_email_address,
 
                 # Facebook would not let me get focus on this button without some custom JS
                 driver.execute_script("arguments[0].click();", confirmation_button)
-            except (NoSuchElementException, StaleElementReferenceException):
+            except SELENIUM_EXCEPTIONS:
                 continue
             else:
                 break
