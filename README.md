@@ -17,12 +17,20 @@ online presence and not have to worry about what you wrote from years ago.
 Personally, I did this so I would feel less attached to my Facebook profile
 (and hence feel the need to use it less).
 
-## How To Use
+## Installation
+You have several options to run it.
+1) Install from PyPI with `pip install --user delete-facebook-posts`
+2) Clone this repo and run `pip install --user .` or do `pip install --user
+git+https://github.com/weskerfoot/DeleteFB.git`
+3) Set up a Python virtualenv, activate it, and run `pip install -r
+requirements.txt`, then you can just run `python deletefb/deletefb.py` as you
+would if you had installed it from PyPI.
+
+## How To Use It
 
 * Make sure that you have Google Chrome installed and that it is up to date
 * Also install the chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/downloads). On Arch Linux you can find this in the `chromium` package, and on Ubuntu it is `chromium-chromedriver`.
-* `pip3 install --user delete-facebook-posts`
-* `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"`
+* Run `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"`
 * The script will log into your Facebook account, go to your profile page, and
   start deleting posts. If it cannot delete something, then it will "hide" it
   from your timeline instead.
