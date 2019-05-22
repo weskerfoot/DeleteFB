@@ -3,16 +3,7 @@
 import argparse
 import time
 import getpass
-
-import tools.wall as wall
-
-from seleniumrequests import Chrome
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
-
-MAX_POSTS = 5000
-SELENIUM_EXCEPTIONS = (NoSuchElementException, StaleElementReferenceException)
+import deletefb.tools.wall as wall
 
 def run_delete():
     parser = argparse.ArgumentParser()

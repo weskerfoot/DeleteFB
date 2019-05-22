@@ -1,3 +1,10 @@
+from selenium.webdriver.chrome.options import Options
+from seleniumrequests import Chrome
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+
+MAX_POSTS = 5000
+SELENIUM_EXCEPTIONS = (NoSuchElementException, StaleElementReferenceException)
 
 def delete_posts(user_email_address,
                  user_password,
