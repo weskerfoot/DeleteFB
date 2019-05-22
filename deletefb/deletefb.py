@@ -1,8 +1,9 @@
 #! /usr/bin/env python
 
 import argparse
-import time
 import getpass
+
+from deletefb.tools.login import login
 import deletefb.tools.wall as wall
 
 def run_delete():
@@ -47,12 +48,14 @@ def run_delete():
 
     args_user_password = args.password or getpass.getpass('Enter your password: ')
 
-    wall.delete_posts(
-            user_email_address=args.email,
-            user_password=args_user_password,
-            user_profile_url=args.profile_url,
-            is_headless=args.is_headless
+    driver = login(
+        user_email_address=args.email,
+        user_password=args_user_password,
+        user_profile_url=args.profile_url,
+        is_headless=args.is_headless
     )
+
+    wall.delete_posts(driver)
 
 if __name__ == "__main__":
     run_delete()
