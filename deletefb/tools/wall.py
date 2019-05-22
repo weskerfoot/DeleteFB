@@ -1,7 +1,5 @@
 import time
 
-from selenium.webdriver.chrome.options import Options
-from seleniumrequests import Chrome
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
