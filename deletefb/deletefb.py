@@ -54,7 +54,7 @@ def run_delete():
         user_profile_url=args.profile_url,
         is_headless=args.is_headless
     )
-
+    
     wall.delete_posts(driver)
 
 if __name__ == "__main__":
