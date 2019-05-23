@@ -1,10 +1,9 @@
 import time
 
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from .common import SELENIUM_EXCEPTIONS
 
 MAX_POSTS = 5000
-SELENIUM_EXCEPTIONS = (NoSuchElementException, StaleElementReferenceException)
 
 def delete_posts(driver):
     """

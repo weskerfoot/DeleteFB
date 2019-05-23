@@ -1,0 +1,3 @@
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+
+SELENIUM_EXCEPTIONS = (NoSuchElementException, StaleElementReferenceException)

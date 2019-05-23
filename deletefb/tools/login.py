@@ -36,14 +36,14 @@ def login(user_email_address,
     password = "pass"
     login = "loginbutton"
 
-    emailelement = driver.find_element_by_name(email)
-    passwordelement = driver.find_element_by_name(password)
+    email_element = driver.find_element_by_name(email)
+    password_element = driver.find_element_by_name(password)
 
-    emailelement.send_keys(user_email_address)
-    passwordelement.send_keys(user_password)
+    email_element.send_keys(user_email_address)
+    password_element.send_keys(user_password)
 
-    loginelement = driver.find_element_by_id(login)
-    loginelement.click()
+    login_element = driver.find_element_by_id(login)
+    login_element.click()
 
     if "Two-factor authentication" in driver.page_source:
         # Allow time to enter 2FA code
