@@ -99,7 +99,7 @@ def delete_posts(user_email_address,
     loginelement = driver.find_element_by_id(login)
     loginelement.click()
 
-    if "Two-factor authentication" in driver.page_source:
+    if "two-factor authentication" in driver.page_source.lower():
         # Allow time to enter 2FA code
         print("Pausing to enter 2FA code")
         time.sleep(20)
