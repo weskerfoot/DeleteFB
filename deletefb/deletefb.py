@@ -59,6 +59,15 @@ def run_delete():
         help="Run browser in headless mode (no gui)"
     )
 
+    parser.add_argument(
+        "-Y",
+        "--year",
+        required=False,
+        dest="year",
+        type=str,
+        help="The year(s) you want posts deleted."
+    )
+    
     args = parser.parse_args()
 
     args_user_password = args.password or getpass.getpass('Enter your password: ')
@@ -68,14 +77,16 @@ def run_delete():
         user_password=args_user_password,
         user_profile_url=args.profile_url,
         is_headless=args.is_headless,
-        two_factor_token=args.two_factor_token
+        two_factor_token=args.two_factor_token,
+        year=args.year
     )
 
 def delete_posts(user_email_address,
                  user_password,
                  user_profile_url,
                  is_headless,
-                 two_factor_token):
+                 two_factor_token,
+                 year):
     """
     user_email_address: str Your Email
     user_password: str Your password
@@ -131,6 +142,9 @@ def delete_posts(user_email_address,
             time.sleep(20)
             print("Continuing execution")
 
+    if year:
+        user_profile_url += "/timeline?year=" + year
+        
     driver.get(user_profile_url)
 
     for _ in range(MAX_POSTS):
