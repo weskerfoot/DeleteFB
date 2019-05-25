@@ -2,6 +2,7 @@ import time
 
 from selenium.webdriver.chrome.options import Options
 from seleniumrequests import Chrome
+from selenium.common.exceptions import NoSuchElementException
 
 def login(user_email_address,
           user_password,
@@ -46,23 +47,34 @@ def login(user_email_address,
     loginelement = driver.find_element_by_id(login)
     loginelement.click()
 
-    if "two-factor authentication" in driver.page_source.lower():
-        if two_factor_token:
+    # Defaults to no 2fa
+    has_2fa = False
 
-            twofactorelement = driver.find_element_by_name(approvals_code)
-            twofactorelement.send_keys(two_factor_token)
+    try:
+        # If this element exists, we've reached a 2FA page
+        driver.find_element_by_xpath("//form[@class=\"checkpoint\"]")
+        driver.find_element_by_xpath("//input[@name=\"approvals_code\"]")
+        has_2fa = True
+    except NoSuchElementException:
+        has_2fa = "two-factor authentication" in driver.page_source.lower() or has_2fa
 
-            # Submits after the code is passed into the form, does not validate 2FA code.
-            contelement = driver.find_element_by_id("checkpointSubmitButton")
-            contelement.click()
+    if two_factor_token and has_2fa:
+        twofactorelement = driver.find_element_by_name(approvals_code)
+        twofactorelement.send_keys(two_factor_token)
 
-            # Defaults to saving this new browser, this occurs on each new automated login.
-            save_browser = driver.find_element_by_id("checkpointSubmitButton")
-            save_browser.click()
-        else:
-            # Allow time to enter 2FA code
-            print("Pausing to enter 2FA code")
-            time.sleep(20)
-            print("Continuing execution")
+        # Submits after the code is passed into the form, does not validate 2FA code.
+        contelement = driver.find_element_by_id("checkpointSubmitButton")
+        contelement.click()
+
+        # Defaults to saving this new browser, this occurs on each new automated login.
+        save_browser = driver.find_element_by_id("checkpointSubmitButton")
+        save_browser.click()
+    elif has_2fa:
+        # Allow time to enter 2FA code
+        print("Pausing to enter 2FA code")
+        time.sleep(35)
+        print("Continuing execution")
+    else:
+        pass
 
     return driver
