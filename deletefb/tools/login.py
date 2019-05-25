@@ -58,6 +58,12 @@ def login(user_email_address,
     except NoSuchElementException:
         has_2fa = "two-factor authentication" in driver.page_source.lower() or has_2fa
 
+    if has_2fa:
+        print("""
+            Two-Factor Auth is enabled.
+            Please file an issue at https://github.com/weskerfoot/DeleteFB/issues if you run into any problems
+        """)
+
     if two_factor_token and has_2fa:
         twofactorelement = driver.find_element_by_name(approvals_code)
         twofactorelement.send_keys(two_factor_token)
