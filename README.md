@@ -38,27 +38,19 @@ would if you had installed it from PyPI.
   everything. You may safely minimize the chrome window without breaking it.
 
 ## 2FA
-* If you have 2-Factor Auth configured then the script will pause for 20
+* It is recommended that you disable Two-Factor Authentication tempoprarily
+  while you are running the script, in order to get the best experience.
+
+* If you do have 2-Factor Auth configured then the script will pause for 20
   seconds to allow you to enter your code and log in.
+
+* You may also pass in a code by using the `-F` argument, e.g. `-F 111111`.
 
 ## Headless mode
 * The tool supports running Chrome in headless mode with the `--headless`
   option, which may be preferable if you plan on running it in the background.
 
-## How To Install Python
-
-### MacOS
-See [this link](https://docs.python-guide.org/starting/install3/osx/) for
-instructions on installing with Brew.
-
-### Linux
-Use your native package manager
-
-### Windows
-See [this link](https://www.howtogeek.com/197947/how-to-install-python-on-windows/), but I make no guarantees that Selenium will actually work as I have not tested it.
-
-
-### Bugs
+## Bugs
 
 If it stops working or otherwise crashes, delete the latest post manually and
 start it again after waiting a minute. I make no guarantees that it will work

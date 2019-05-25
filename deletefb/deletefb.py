@@ -1,16 +1,10 @@
 #! /usr/bin/env python
 
 import argparse
-import time
 import getpass
 
-from seleniumrequests import Chrome
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
-
-MAX_POSTS = 5000
-SELENIUM_EXCEPTIONS = (NoSuchElementException, StaleElementReferenceException)
+from deletefb.tools.login import login
+import deletefb.tools.wall as wall
 
 def run_delete():
     parser = argparse.ArgumentParser()
@@ -63,7 +57,7 @@ def run_delete():
 
     args_user_password = args.password or getpass.getpass('Enter your password: ')
 
-    delete_posts(
+    driver = login(
         user_email_address=args.email,
         user_password=args_user_password,
         user_profile_url=args.profile_url,
@@ -71,99 +65,7 @@ def run_delete():
         two_factor_token=args.two_factor_token
     )
 
-def delete_posts(user_email_address,
-                 user_password,
-                 user_profile_url,
-                 is_headless,
-                 two_factor_token):
-    """
-    user_email_address: str Your Email
-    user_password: str Your password
-    user_profile_url: str Your profile URL
-    """
-    # The Chrome driver is required because Gecko was having issues
-    chrome_options = Options()
-    prefs = {"profile.default_content_setting_values.notifications": 2, 'disk-cache-size': 4096}
-    chrome_options.add_experimental_option("prefs", prefs)
-    chrome_options.add_argument("start-maximized")
-
-    if is_headless:
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('log-level=2')
-
-    driver = Chrome(options=chrome_options)
-    driver.implicitly_wait(10)
-
-    driver.get("https://facebook.com")
-
-    email = "email"
-    password = "pass"
-    login = "loginbutton"
-    approvals_code = "approvals_code"
-
-    emailelement = driver.find_element_by_name(email)
-    passwordelement = driver.find_element_by_name(password)
-
-    emailelement.send_keys(user_email_address)
-    passwordelement.send_keys(user_password)
-
-    loginelement = driver.find_element_by_id(login)
-    loginelement.click()
-
-    if "two-factor authentication" in driver.page_source.lower():
-
-        if two_factor_token:
-
-            twofactorelement = driver.find_element_by_name(approvals_code)
-            twofactorelement.send_keys(two_factor_token)
-
-            #Submits after the code is passed into the form, does not validate 2FA code.
-            contelement = driver.find_element_by_id("checkpointSubmitButton")
-            contelement.click()
-
-            #Defaults to saving this new browser, this occurs on each new automated login. 
-            save_browser = driver.find_element_by_id("checkpointSubmitButton")
-            save_browser.click()
-        else:
-            # Allow time to enter 2FA code
-            print("Pausing to enter 2FA code")
-            time.sleep(20)
-            print("Continuing execution")
-
-    driver.get(user_profile_url)
-
-    for _ in range(MAX_POSTS):
-        post_button_sel = "_4xev"
-
-        while True:
-            try:
-                timeline_element = driver.find_element_by_class_name(post_button_sel)
-                actions = ActionChains(driver)
-                actions.move_to_element(timeline_element).click().perform()
-
-                menu = driver.find_element_by_css_selector("#globalContainer > div.uiContextualLayerPositioner.uiLayer > div")
-                actions.move_to_element(menu).perform()
-
-                try:
-                    delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"FeedDeleteOption\"]")
-                except SELENIUM_EXCEPTIONS:
-                    delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"HIDE_FROM_TIMELINE\"]")
-
-                actions.move_to_element(delete_button).click().perform()
-                confirmation_button = driver.find_element_by_class_name("layerConfirm")
-
-                # Facebook would not let me get focus on this button without some custom JS
-                driver.execute_script("arguments[0].click();", confirmation_button)
-            except SELENIUM_EXCEPTIONS:
-                continue
-            else:
-                break
-
-        # Required to sleep the thread for a bit after using JS to click this button
-        time.sleep(5)
-        driver.refresh()
-
+    wall.delete_posts(driver)
 
 if __name__ == "__main__":
     run_delete()
