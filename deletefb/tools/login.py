@@ -6,7 +6,8 @@ from seleniumrequests import Chrome
 def login(user_email_address,
           user_password,
           user_profile_url,
-          is_headless):
+          is_headless,
+          two_factor_token):
     """
     Attempts to log into Facebook
     Returns a driver object
@@ -35,21 +36,35 @@ def login(user_email_address,
     email = "email"
     password = "pass"
     login = "loginbutton"
+    approvals_code = "approvals_code"
 
-    email_element = driver.find_element_by_name(email)
-    password_element = driver.find_element_by_name(password)
+    emailelement = driver.find_element_by_name(email)
+    passwordelement = driver.find_element_by_name(password)
 
-    email_element.send_keys(user_email_address)
-    password_element.send_keys(user_password)
+    emailelement.send_keys(user_email_address)
+    passwordelement.send_keys(user_password)
 
-    login_element = driver.find_element_by_id(login)
-    login_element.click()
+    loginelement = driver.find_element_by_id(login)
+    loginelement.click()
 
-    if "Two-factor authentication" in driver.page_source:
-        # Allow time to enter 2FA code
-        print("Pausing to enter 2FA code")
-        time.sleep(20)
-        print("Continuing execution")
+    if "two-factor authentication" in driver.page_source.lower():
+        if two_factor_token:
+
+            twofactorelement = driver.find_element_by_name(approvals_code)
+            twofactorelement.send_keys(two_factor_token)
+
+            # Submits after the code is passed into the form, does not validate 2FA code.
+            contelement = driver.find_element_by_id("checkpointSubmitButton")
+            contelement.click()
+
+            # Defaults to saving this new browser, this occurs on each new automated login.
+            save_browser = driver.find_element_by_id("checkpointSubmitButton")
+            save_browser.click()
+        else:
+            # Allow time to enter 2FA code
+            print("Pausing to enter 2FA code")
+            time.sleep(20)
+            print("Continuing execution")
+
     driver.get(user_profile_url)
-
     return driver
