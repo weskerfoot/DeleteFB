@@ -53,6 +53,15 @@ def run_delete():
         help="Run browser in headless mode (no gui)"
     )
 
+    parser.add_argument(
+        "-Y",
+        "--year",
+        required=False,
+        dest="year",
+        type=str,
+        help="The year(s) you want posts deleted."
+    )
+
     args = parser.parse_args()
 
     args_user_password = args.password or getpass.getpass('Enter your password: ')
@@ -60,12 +69,13 @@ def run_delete():
     driver = login(
         user_email_address=args.email,
         user_password=args_user_password,
-        user_profile_url=args.profile_url,
         is_headless=args.is_headless,
         two_factor_token=args.two_factor_token
     )
 
-    wall.delete_posts(driver)
+    wall.delete_posts(driver,
+                      args.profile_url,
+                      year=args.year)
 
 if __name__ == "__main__":
     run_delete()

@@ -5,10 +5,18 @@ from .common import SELENIUM_EXCEPTIONS
 
 MAX_POSTS = 5000
 
-def delete_posts(driver):
+def delete_posts(driver,
+                 user_profile_url,
+                 year=None):
     """
     Deletes or hides all posts from the wall
     """
+
+    if not year is None:
+        user_profile_url = "{0}/timeline?year={1}".format(user_profile_url, year)
+
+    driver.get(user_profile_url)
+
     for _ in range(MAX_POSTS):
         post_button_sel = "_4xev"
 

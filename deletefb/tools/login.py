@@ -5,7 +5,6 @@ from seleniumrequests import Chrome
 
 def login(user_email_address,
           user_password,
-          user_profile_url,
           is_headless,
           two_factor_token):
     """
@@ -66,5 +65,4 @@ def login(user_email_address,
             time.sleep(20)
             print("Continuing execution")
 
-    driver.get(user_profile_url)
     return driver
