@@ -1,9 +1,13 @@
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from selenium.common.exceptions import (NoSuchElementException,
+                                        StaleElementReferenceException,
+                                        TimeoutException)
 from time import sleep
 from json import dumps
 from os.path import abspath, relpath, split
 
-SELENIUM_EXCEPTIONS = (NoSuchElementException, StaleElementReferenceException)
+SELENIUM_EXCEPTIONS = (NoSuchElementException,
+                       StaleElementReferenceException,
+                       TimeoutException)
 
 def try_move(actions, el):
     for _ in range(10):
