@@ -78,6 +78,9 @@ def run_delete():
 
     args = parser.parse_args()
 
+    if args.year and args.mode != "wall":
+        parser.error("The --year option is only supported in wall mode")
+
     args_user_password = args.password or getpass.getpass('Enter your password: ')
 
     driver = login(
