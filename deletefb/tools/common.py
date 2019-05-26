@@ -30,3 +30,9 @@ def archiver(category):
         log_file.write("{0}\n".format(dumps(structured_content)))
 
     return (log_file, log)
+
+
+no_chrome_driver = """
+You need to install the chromedriver for Selenium\n
+Please see this link https://github.com/weskerfoot/DeleteFB#how-to-use-it\n
+"""
