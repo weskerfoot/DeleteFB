@@ -23,8 +23,7 @@ def load_likes(driver):
     except SELENIUM_EXCEPTIONS:
         return
 
-def unlike_pages(driver,
-                 user_profile_url):
+def unlike_pages(driver):
     """
     Unlike all pages
     """
@@ -46,8 +45,6 @@ def unlike_pages(driver,
             try:
                 if "Liked" in button.text:
                     page_name = button.find_element_by_xpath("./../..").text.split("\n")[0]
-
-                    print("Trying to unlike {0}".format(page_name))
 
                     driver.execute_script("arguments[0].click();", button)
 

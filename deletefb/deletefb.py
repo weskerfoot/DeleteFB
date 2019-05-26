@@ -92,7 +92,7 @@ def run_delete():
                           args.profile_url,
                           year=args.year)
     elif args.mode == "unlike_pages":
-        likes.unlike_pages(driver, args.profile_url)
+        likes.unlike_pages(driver)
     else:
         print("Please enter a valid mode")
         exit(1)
