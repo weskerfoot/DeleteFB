@@ -23,8 +23,7 @@ You have several options to run it.
 2) Clone this repo and run `pip install --user .` or do `pip install --user
 git+https://github.com/weskerfoot/DeleteFB.git`
 3) Set up a Python virtualenv, activate it, and run `pip install -r
-requirements.txt`, then you can just run `python deletefb/deletefb.py` as you
-would if you had installed it from PyPI.
+requirements.txt`, then you can just run `python -m deletefb.deletefb.py` in the project directory, as you would if you had installed it from PyPI.
 
 ## How To Use It
 

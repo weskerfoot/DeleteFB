@@ -5,8 +5,9 @@ import getpass
 
 from sys import exit
 from deletefb.tools.login import login
-import deletefb.tools.wall as wall
-import deletefb.tools.likes as likes
+from .tools.login import login
+from .tools.wall import delete_posts
+from .tools.likes import unlike_pages
 
 def run_delete():
     parser = argparse.ArgumentParser()
@@ -91,11 +92,11 @@ def run_delete():
     )
 
     if args.mode == "wall":
-        wall.delete_posts(driver,
-                          args.profile_url,
-                          year=args.year)
+        delete_posts(driver,
+                     args.profile_url,
+                     year=args.year)
     elif args.mode == "unlike_pages":
-        likes.unlike_pages(driver)
+        unlike_pages(driver)
     else:
         print("Please enter a valid mode")
         exit(1)
