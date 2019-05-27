@@ -28,7 +28,7 @@ requirements.txt`, then you can just run `python -m deletefb.deletefb.py` in the
 ## How To Use It
 
 * Make sure that you have Google Chrome installed and that it is up to date
-* Also install the chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/downloads) for an explanation of what the chromedriver does.
+* Also install the chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/home) for an explanation of what the chromedriver does.
   * On Linux, it will be called something like `chromium-chromedriver` or just
     `chromium`.
   * On MacOS, it will be available via brew, with the following commands:
