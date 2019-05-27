@@ -3,8 +3,8 @@
 import argparse
 import getpass
 
-from deletefb.tools.login import login
-import deletefb.tools.wall as wall
+from .tools.login import login
+from .tools.wall import delete_posts
 
 def run_delete():
     parser = argparse.ArgumentParser()
@@ -65,7 +65,7 @@ def run_delete():
         two_factor_token=args.two_factor_token
     )
 
-    wall.delete_posts(driver)
+    delete_posts(driver)
 
 if __name__ == "__main__":
     run_delete()
