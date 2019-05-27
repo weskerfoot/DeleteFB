@@ -4,7 +4,6 @@ import argparse
 import getpass
 
 from sys import exit
-from deletefb.tools.login import login
 from .tools.login import login
 from .tools.wall import delete_posts
 from .tools.likes import unlike_pages
