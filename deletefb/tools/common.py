@@ -4,6 +4,7 @@ from selenium.common.exceptions import (NoSuchElementException,
 from time import sleep
 from json import dumps
 from os.path import abspath, relpath, split
+from os import environ
 
 SELENIUM_EXCEPTIONS = (NoSuchElementException,
                        StaleElementReferenceException,
@@ -30,6 +31,8 @@ def archiver(category):
     log_file = open(log_path, mode="wt", buffering=1)
 
     def log(content, timestamp=False):
+        if environ.get("DELETEFB_ARCHIVE", "true") == "false":
+            return
         structured_content = {
                                "category" : category,
                                "content" : content,

@@ -4,6 +4,7 @@ import argparse
 import getpass
 
 from sys import exit
+from os import environ
 from .tools.login import login
 from .tools.wall import delete_posts
 from .tools.likes import unlike_pages
@@ -68,6 +69,14 @@ def run_delete():
     )
 
     parser.add_argument(
+        "--no-archive",
+        action="store_true",
+        dest="archive_off",
+        default=True,
+        help="Turn off archiving (on by default)"
+    )
+
+    parser.add_argument(
         "-Y",
         "--year",
         required=False,
@@ -77,6 +86,9 @@ def run_delete():
     )
 
     args = parser.parse_args()
+
+    if args.archive_off:
+        environ["DELETEFB_ARCHIVE"] = "false" if args.archive_off else "true"
 
     if args.year and args.mode != "wall":
         parser.error("The --year option is only supported in wall mode")
