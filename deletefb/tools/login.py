@@ -1,11 +1,13 @@
 import time
 
+from sys import stderr, exit
 from selenium.webdriver.chrome.options import Options
 from seleniumrequests import Chrome
+from selenium.common.exceptions import NoSuchElementException
+from .common import no_chrome_driver
 
 def login(user_email_address,
           user_password,
-          user_profile_url,
           is_headless,
           two_factor_token):
     """
@@ -28,7 +30,15 @@ def login(user_email_address,
         chrome_options.add_argument('--disable-gpu')
         chrome_options.add_argument('log-level=2')
 
-    driver = Chrome(options=chrome_options)
+    try:
+        driver = Chrome(options=chrome_options)
+    except Exception as e:
+        # The user does not have chromedriver installed
+        # Tell them to install it
+        stderr.write(str(e))
+        stderr.write(no_chrome_driver)
+        exit(1)
+
     driver.implicitly_wait(10)
 
     driver.get("https://facebook.com")
@@ -47,24 +57,40 @@ def login(user_email_address,
     loginelement = driver.find_element_by_id(login)
     loginelement.click()
 
-    if "two-factor authentication" in driver.page_source.lower():
-        if two_factor_token:
+    # Defaults to no 2fa
+    has_2fa = False
 
-            twofactorelement = driver.find_element_by_name(approvals_code)
-            twofactorelement.send_keys(two_factor_token)
+    try:
+        # If this element exists, we've reached a 2FA page
+        driver.find_element_by_xpath("//form[@class=\"checkpoint\"]")
+        driver.find_element_by_xpath("//input[@name=\"approvals_code\"]")
+        has_2fa = True
+    except NoSuchElementException:
+        has_2fa = "two-factor authentication" in driver.page_source.lower() or has_2fa
 
-            # Submits after the code is passed into the form, does not validate 2FA code.
-            contelement = driver.find_element_by_id("checkpointSubmitButton")
-            contelement.click()
+    if has_2fa:
+        print("""
+            Two-Factor Auth is enabled.
+            Please file an issue at https://github.com/weskerfoot/DeleteFB/issues if you run into any problems
+        """)
 
-            # Defaults to saving this new browser, this occurs on each new automated login.
-            save_browser = driver.find_element_by_id("checkpointSubmitButton")
-            save_browser.click()
-        else:
-            # Allow time to enter 2FA code
-            print("Pausing to enter 2FA code")
-            time.sleep(20)
-            print("Continuing execution")
+    if two_factor_token and has_2fa:
+        twofactorelement = driver.find_element_by_name(approvals_code)
+        twofactorelement.send_keys(two_factor_token)
 
-    driver.get(user_profile_url)
+        # Submits after the code is passed into the form, does not validate 2FA code.
+        contelement = driver.find_element_by_id("checkpointSubmitButton")
+        contelement.click()
+
+        # Defaults to saving this new browser, this occurs on each new automated login.
+        save_browser = driver.find_element_by_id("checkpointSubmitButton")
+        save_browser.click()
+    elif has_2fa:
+        # Allow time to enter 2FA code
+        print("Pausing to enter 2FA code")
+        time.sleep(35)
+        print("Continuing execution")
+    else:
+        pass
+
     return driver

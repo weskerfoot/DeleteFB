@@ -1,20 +1,40 @@
 import time
 
 from selenium.webdriver.common.action_chains import ActionChains
-from .common import SELENIUM_EXCEPTIONS
+from .common import SELENIUM_EXCEPTIONS, archiver
 
-MAX_POSTS = 5000
+# Used as a threshold to avoid running forever
+MAX_POSTS = 15000
 
-def delete_posts(driver):
+def delete_posts(driver,
+                 user_profile_url,
+                 year=None):
     """
     Deletes or hides all posts from the wall
     """
+
+    if not year is None:
+        user_profile_url = "{0}/timeline?year={1}".format(user_profile_url, year)
+
+    driver.get(user_profile_url)
+
+    wall_log, archive_wall_post = archiver("wall")
+
     for _ in range(MAX_POSTS):
         post_button_sel = "_4xev"
+        post_content_sel = "_5_jv"
+
+        post_timestamp_sel = "timestamp"
 
         while True:
             try:
                 timeline_element = driver.find_element_by_class_name(post_button_sel)
+
+                post_content_element = driver.find_element_by_class_name(post_content_sel)
+                post_content_ts = driver.find_element_by_class_name(post_timestamp_sel)
+
+                archive_wall_post(post_content_element.text, timestamp=post_content_ts.text)
+
                 actions = ActionChains(driver)
                 actions.move_to_element(timeline_element).click().perform()
 

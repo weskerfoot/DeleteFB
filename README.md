@@ -49,10 +49,23 @@ requirements.txt`, then you can just run `python -m deletefb.deletefb.py` in the
 * It is recommended that you disable Two-Factor Authentication tempoprarily
   while you are running the script, in order to get the best experience.
 
+* If you run into issues with Facebook complaining about your browser,
+  currently the only workaround is to manually click through them.
+
 * If you do have 2-Factor Auth configured then the script will pause for 20
   seconds to allow you to enter your code and log in.
 
 * You may also pass in a code by using the `-F` argument, e.g. `-F 111111`.
+
+## Delete by year
+* The tool supports passing the `--year` flag in order to delete wall posts by
+  year. It is incompatible with any mode other than `wall`.
+
+## Archival
+* The tool will archive everything being deleted by default in `.log` files.
+  Currently they are simply stored as JSON objects for each line in the log. It
+  will archive the content, and a timestamp if it is available. You may disable
+  this feature by using `--no-archive`.
 
 ## Headless mode
 * The tool supports running Chrome in headless mode with the `--headless`

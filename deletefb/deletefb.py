@@ -3,11 +3,26 @@
 import argparse
 import getpass
 
+from sys import exit
+from os import environ
 from .tools.login import login
 from .tools.wall import delete_posts
+from .tools.likes import unlike_pages
 
 def run_delete():
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "-M",
+        "--mode",
+        required=False,
+        default="wall",
+        dest="mode",
+        type=str,
+        choices=["wall", "unlike_pages"],
+        help="The mode you want to run in. Default is `wall' which deletes wall posts"
+    )
+
     parser.add_argument(
         "-E",
         "--email",
@@ -53,19 +68,49 @@ def run_delete():
         help="Run browser in headless mode (no gui)"
     )
 
+    parser.add_argument(
+        "--no-archive",
+        action="store_true",
+        dest="archive_off",
+        default=True,
+        help="Turn off archiving (on by default)"
+    )
+
+    parser.add_argument(
+        "-Y",
+        "--year",
+        required=False,
+        dest="year",
+        type=str,
+        help="The year(s) you want posts deleted."
+    )
+
     args = parser.parse_args()
+
+    if args.archive_off:
+        environ["DELETEFB_ARCHIVE"] = "false" if args.archive_off else "true"
+
+    if args.year and args.mode != "wall":
+        parser.error("The --year option is only supported in wall mode")
 
     args_user_password = args.password or getpass.getpass('Enter your password: ')
 
     driver = login(
         user_email_address=args.email,
         user_password=args_user_password,
-        user_profile_url=args.profile_url,
         is_headless=args.is_headless,
         two_factor_token=args.two_factor_token
     )
 
-    delete_posts(driver)
+    if args.mode == "wall":
+        delete_posts(driver,
+                     args.profile_url,
+                     year=args.year)
+    elif args.mode == "unlike_pages":
+        unlike_pages(driver)
+    else:
+        print("Please enter a valid mode")
+        exit(1)
 
 if __name__ == "__main__":
     run_delete()
