@@ -61,6 +61,11 @@ requirements.txt`, then you can just run `python -m deletefb.deletefb.py` in the
 * The tool supports passing the `--year` flag in order to delete wall posts by
   year. It is incompatible with any mode other than `wall`.
 
+## Unlike Pages
+* You may use `-M unlike_pages` to unlike all of your pages. The names of the
+  pages will be archived (unless archival is turned off), and this option
+  conflicts with the year option.
+
 ## Archival
 * The tool will archive everything being deleted by default in `.log` files.
   Currently they are simply stored as JSON objects for each line in the log. It
