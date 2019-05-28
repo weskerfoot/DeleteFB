@@ -25,12 +25,17 @@ def archiver(category):
 
     call archiver like archive("some content")
     """
-    log_path = abspath(relpath(split(category)[-1], "."))
+    log_path = "{0}.log".format(abspath(relpath(split(category)[-1], ".")))
 
     log_file = open(log_path, mode="wt", buffering=1)
 
-    def log(content):
-        structured_content = {"category" : category, "content" : content}
+    def log(content, timestamp=False):
+        structured_content = {
+                               "category" : category,
+                               "content" : content,
+                               "timestamp" : timestamp
+                              }
+
         log_file.write("{0}\n".format(dumps(structured_content)))
 
     return (log_file, log)
