@@ -52,7 +52,7 @@ requirements.txt`, then you can just run `python -m deletefb.deletefb.py` in the
 * If you run into issues with Facebook complaining about your browser,
   currently the only workaround is to manually click through them.
 
-* If you do have 2-Factor Auth configured then the script will pause for 20
+* If you do have 2-Factor Auth configured then the script will pause for 35
   seconds to allow you to enter your code and log in.
 
 * You may also pass in a code by using the `-F` argument, e.g. `-F 111111`.
