@@ -88,7 +88,10 @@ def run_delete():
     args = parser.parse_args()
 
     if args.archive_off:
-        environ["DELETEFB_ARCHIVE"] = "false" if args.archive_off else "true"
+        environ["DELETEFB_ARCHIVE"] = "false"
+    else:
+        environ["DELETEFB_ARCHIVE"] = "true"
+
 
     if args.year and args.mode != "wall":
         parser.error("The --year option is only supported in wall mode")
