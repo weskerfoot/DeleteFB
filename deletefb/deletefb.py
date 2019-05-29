@@ -72,7 +72,7 @@ def run_delete():
         "--no-archive",
         action="store_true",
         dest="archive_off",
-        default=True,
+        default=False,
         help="Turn off archiving (on by default)"
     )
 

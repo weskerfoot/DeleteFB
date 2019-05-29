@@ -28,7 +28,7 @@ def archiver(category):
     """
     log_path = "{0}.log".format(abspath(relpath(split(category)[-1], ".")))
 
-    log_file = open(log_path, mode="wt", buffering=1)
+    log_file = open(log_path, mode="ta", buffering=1)
 
     def log(content, timestamp=False):
         if environ.get("DELETEFB_ARCHIVE", "true") == "false":

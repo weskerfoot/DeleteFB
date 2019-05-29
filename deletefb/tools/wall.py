@@ -18,13 +18,13 @@ def delete_posts(driver,
 
     driver.get(user_profile_url)
 
-    wall_log, archive_wall_post = archiver("wall")
-
     for _ in range(MAX_POSTS):
         post_button_sel = "_4xev"
-        post_content_sel = "_5_jv"
 
-        post_timestamp_sel = "timestamp"
+        post_content_sel = "userContent"
+        post_timestamp_sel = "timestampContent"
+
+        wall_log, archive_wall_post = archiver("wall")
 
         while True:
             try:
@@ -55,6 +55,7 @@ def delete_posts(driver,
                 continue
             else:
                 break
+        wall_log.close()
 
         # Required to sleep the thread for a bit after using JS to click this button
         time.sleep(5)
