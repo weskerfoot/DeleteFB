@@ -44,7 +44,10 @@ def delete_posts(driver,
                 try:
                     delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"FeedDeleteOption\"]")
                 except SELENIUM_EXCEPTIONS:
-                    delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"HIDE_FROM_TIMELINE\"]")
+                    try:
+                        delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"HIDE_FROM_TIMELINE\"]")
+                    except SELENIUM_EXCEPTIONS:
+                        delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"UNTAG\"]")
 
                 actions.move_to_element(delete_button).click().perform()
                 confirmation_button = driver.find_element_by_class_name("layerConfirm")
