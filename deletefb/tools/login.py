@@ -1,10 +1,12 @@
 import time
+import sys
 
-from sys import stderr, exit
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 from seleniumrequests import Chrome
-from selenium.common.exceptions import NoSuchElementException
-from .common import no_chrome_driver
+
+from .common import NO_CHROME_DRIVER
+
 
 def login(user_email_address,
           user_password,
@@ -14,9 +16,13 @@ def login(user_email_address,
     Attempts to log into Facebook
     Returns a driver object
 
-    user_email_address: str Your Email
-    user_password: str Your password
-    user_profile_url: str Your profile URL
+    Args:
+        user_email_address: str Your email
+        user_password: str Your password
+        user_profile_url: str Your profile URL
+
+    Returns:
+        seleniumrequests.Chrome instance
 
     """
     # The Chrome driver is required because Gecko was having issues
@@ -35,9 +41,9 @@ def login(user_email_address,
     except Exception as e:
         # The user does not have chromedriver installed
         # Tell them to install it
-        stderr.write(str(e))
-        stderr.write(no_chrome_driver)
-        exit(1)
+        sys.stderr.write(str(e))
+        sys.stderr.write(NO_CHROME_DRIVER)
+        sys.exit(1)
 
     driver.implicitly_wait(10)
 
@@ -45,7 +51,7 @@ def login(user_email_address,
 
     email = "email"
     password = "pass"
-    login = "loginbutton"
+    login_button = "loginbutton"
     approvals_code = "approvals_code"
 
     emailelement = driver.find_element_by_name(email)
@@ -54,7 +60,7 @@ def login(user_email_address,
     emailelement.send_keys(user_email_address)
     passwordelement.send_keys(user_password)
 
-    loginelement = driver.find_element_by_id(login)
+    loginelement = driver.find_element_by_id(login_button)
     loginelement.click()
 
     # Defaults to no 2fa

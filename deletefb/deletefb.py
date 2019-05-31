@@ -1,10 +1,10 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 import argparse
 import getpass
+import sys
+import os
 
-from sys import exit
-from os import environ
 from .tools.login import login
 from .tools.wall import delete_posts
 from .tools.likes import unlike_pages
@@ -88,9 +88,9 @@ def run_delete():
     args = parser.parse_args()
 
     if args.archive_off:
-        environ["DELETEFB_ARCHIVE"] = "false"
+        os.environ["DELETEFB_ARCHIVE"] = "false"
     else:
-        environ["DELETEFB_ARCHIVE"] = "true"
+        os.environ["DELETEFB_ARCHIVE"] = "true"
 
 
     if args.year and args.mode != "wall":
@@ -113,7 +113,7 @@ def run_delete():
         unlike_pages(driver)
     else:
         print("Please enter a valid mode")
-        exit(1)
+        sys.exit(1)
 
 if __name__ == "__main__":
     run_delete()

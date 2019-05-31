@@ -1,19 +1,26 @@
 import time
 
 from selenium.webdriver.common.action_chains import ActionChains
+
 from .common import SELENIUM_EXCEPTIONS, archiver
 
 # Used as a threshold to avoid running forever
 MAX_POSTS = 15000
+
 
 def delete_posts(driver,
                  user_profile_url,
                  year=None):
     """
     Deletes or hides all posts from the wall
+
+    Args:
+        driver: seleniumrequests.Chrome Driver instance
+        user_profile_url: str
+        year: optional int YYYY year
     """
 
-    if not year is None:
+    if year is not None:
         user_profile_url = "{0}/timeline?year={1}".format(user_profile_url, year)
 
     driver.get(user_profile_url)
