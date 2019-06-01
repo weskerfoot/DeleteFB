@@ -18,6 +18,8 @@ def load_likes(driver):
     Returns:
         None
     """
+
+    driver.refresh()
     driver.get("https://www.facebook.com/pages/?category=liked")
 
     wait = WebDriverWait(driver, 20)

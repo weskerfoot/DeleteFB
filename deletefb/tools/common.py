@@ -13,7 +13,6 @@ from selenium.common.exceptions import (
     TimeoutException
 )
 
-
 SELENIUM_EXCEPTIONS = (
     NoSuchElementException,
     StaleElementReferenceException,
