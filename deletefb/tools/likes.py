@@ -2,11 +2,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from .common import SELENIUM_EXCEPTIONS, archiver
+
 
 def load_likes(driver):
     """
     Loads the page that lists all pages you like
+
+    Args:
+        driver: seleniumrequests.Chrome Driver instance
+
+    Returns:
+        None
     """
     driver.get("https://www.facebook.com/pages/?category=liked")
 
@@ -26,6 +34,12 @@ def load_likes(driver):
 def unlike_pages(driver):
     """
     Unlike all pages
+
+    Args:
+        driver: seleniumrequests.Chrome Driver instance
+
+    Returns:
+        None
     """
 
     like_log, archive_likes = archiver("likes")
@@ -52,7 +66,7 @@ def unlike_pages(driver):
 
                     print("{0} was unliked".format(page_name))
 
-            except SELENIUM_EXCEPTIONS as e:
+            except SELENIUM_EXCEPTIONS:
                 continue
 
         load_likes(driver)
