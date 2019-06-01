@@ -2,9 +2,11 @@ import json
 import logging
 import logging.config
 import os
-from os.path import abspath, relpath, split, isfile
 import time
 
+from config import settings
+
+from os.path import abspath, relpath, split, isfile
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
@@ -57,8 +59,9 @@ def archiver(category):
     log_file = open(log_path, mode="ta", buffering=1)
 
     def log(content, timestamp=False):
-        if os.environ.get("DELETEFB_ARCHIVE", "true") == "false":
+        if not settings["ARCHIVE"]:
             return
+
         structured_content = {
             "category" : category,
             "content" : content,

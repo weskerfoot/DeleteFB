@@ -1,0 +1,3 @@
+settings = {
+    "ARCHIVE" : False
+}
