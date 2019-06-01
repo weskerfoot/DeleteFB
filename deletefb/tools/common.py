@@ -26,15 +26,21 @@ def try_move(actions, el):
             time.sleep(5)
             continue
 
-def logger(name: str):
-    # called from directory (__main__.py)
+def logger(name):
+    """
+    Args:
+        name (str): Logger name
+
+    Returns:
+        logging.Logger
+    """
     config_path = "deletefb/logging_conf.json"
     if not isfile(config_path):  # called from file (deletefb.py)
         os.chdir("..")
     with open(config_path, "r", encoding="utf-8") as config_file:
         config = json.load(config_file)
         logging.config.dictConfig(config["logging"])
-    return logging.getLogger("deletefb")
+    return logging.getLogger(name)
 
 def archiver(category):
     """

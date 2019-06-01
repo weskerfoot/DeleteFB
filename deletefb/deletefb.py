@@ -11,8 +11,7 @@ from tools.login import login
 from tools.wall import delete_posts
 from tools.likes import unlike_pages
 
-
-LOG = logger(__name__)
+LOG = logger("deletefb")
 
 
 def run_delete():

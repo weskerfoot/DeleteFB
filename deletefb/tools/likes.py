@@ -3,7 +3,9 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from .common import SELENIUM_EXCEPTIONS, archiver
+from .common import SELENIUM_EXCEPTIONS, archiver, logger
+
+LOG = logger(__name__)
 
 
 def load_likes(driver):
@@ -29,6 +31,7 @@ def load_likes(driver):
             EC.presence_of_element_located((By.XPATH, "//button/div/i[@aria-hidden=\"true\"]"))
         )
     except SELENIUM_EXCEPTIONS:
+        LOG.exception("Traceback of load_likes")
         return
 
 def unlike_pages(driver):
