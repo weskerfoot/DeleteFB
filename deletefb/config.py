@@ -1,3 +1,3 @@
 settings = {
-    "ARCHIVE" : False
+    "ARCHIVE" : True
 }
