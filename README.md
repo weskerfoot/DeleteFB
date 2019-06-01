@@ -22,8 +22,7 @@ You have several options to run it.
 1) Install from PyPI with `pip install --user delete-facebook-posts`
 2) Clone this repo and run `pip install --user .` or do `pip install --user
 git+https://github.com/weskerfoot/DeleteFB.git`
-3) Set up a Python virtualenv, activate it, and run `pip install -r
-requirements.txt`, then you can just run `python -m deletefb.deletefb.py` in the project directory, as you would if you had installed it from PyPI.
+3) Set up a Python virtualenv, activate it, and run `pip install -r requirements.txt`, then you can just run `python deletefb` in the DeleteFB directory.
 
 ## How To Use It
 
