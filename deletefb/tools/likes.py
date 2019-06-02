@@ -64,13 +64,17 @@ def unlike_page(driver, url, archive=None):
 
     print("Unliking {0}".format(url))
 
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 60)
 
     actions = ActionChains(driver)
 
-    wait.until(
-        EC.presence_of_element_located((By.XPATH, "//*[text()='Liked']"))
-    )
+    try:
+        wait.until(
+            EC.presence_of_element_located((By.XPATH, "//*[text()='Liked']"))
+        )
+    except SELENIUM_EXCEPTIONS:
+        # Something went wrong with this page, so skip it
+        return
 
     button = driver.find_element_by_xpath("//*[text()='Liked']")
 
