@@ -19,13 +19,15 @@ SELENIUM_EXCEPTIONS = (
     TimeoutException
 )
 
-def try_move(actions, el):
-    for _ in range(10):
-        try:
-            actions.move_to_element(el).perform()
-        except StaleElementReferenceException:
-            time.sleep(5)
-            continue
+def click_button(driver, el):
+    """
+    Click a button using Javascript
+    Args:
+        driver: seleniumrequests.Chrome Driver instance
+    Returns:
+        None
+    """
+    driver.execute_script("arguments[0].click();", el)
 
 def logger(name):
     """

@@ -2,9 +2,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 
-from .common import SELENIUM_EXCEPTIONS, archiver, logger
+from .common import SELENIUM_EXCEPTIONS, archiver, logger, click_button
 
 LOG = logger(__name__)
 
@@ -70,15 +69,17 @@ def unlike_page(driver, url):
 
     button = driver.find_element_by_xpath("//*[text()='Liked']")
 
-    driver.execute_script("arguments[0].click();", button)
+    # Click the "Liked" button to open up "Unlike"
+    click_button(driver, button)
 
     wait.until(
         EC.presence_of_element_located((By.XPATH, "//a/span[text()='Unlike']"))
     )
 
+    # There should be an "Unlike" button now, click it
     unlike_button = driver.find_element_by_xpath("//a/span[text()='Unlike']/..")
 
-    driver.execute_script("arguments[0].click();", unlike_button)
+    click_button(driver, unlike_button)
 
 
 def unlike_pages(driver, profile_url):

@@ -1,12 +1,10 @@
 import time
-
 from selenium.webdriver.common.action_chains import ActionChains
 
-from .common import SELENIUM_EXCEPTIONS, archiver
+from .common import SELENIUM_EXCEPTIONS, archiver, click_button
 
 # Used as a threshold to avoid running forever
 MAX_POSTS = 15000
-
 
 def delete_posts(driver,
                  user_profile_url,
@@ -59,8 +57,8 @@ def delete_posts(driver,
                 actions.move_to_element(delete_button).click().perform()
                 confirmation_button = driver.find_element_by_class_name("layerConfirm")
 
-                # Facebook would not let me get focus on this button without some custom JS
-                driver.execute_script("arguments[0].click();", confirmation_button)
+                click_button(driver, confirmation_button)
+
             except SELENIUM_EXCEPTIONS:
                 continue
             else:
