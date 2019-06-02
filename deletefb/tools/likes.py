@@ -32,6 +32,24 @@ def load_likes(driver, profile_url):
         LOG.exception("Traceback of load_likes")
         return
 
+
+def get_page_links(driver):
+    pages = driver.find_elements_by_xpath("//li//div/div/a[contains(@class, 'lfloat')]")
+
+    actions = ActionChains(driver)
+
+    return [page.get_attribute("href").replace("www", "mobile") for page in pages]
+
+
+def unlike_page(driver, url):
+    driver.get(url)
+
+    actions = ActionChains(driver)
+
+    button_element = find_element_by_xpath("//span[text()='Unlike']/..")
+    actions.move_to_element(button_element).click().perform()
+
+
 def unlike_pages(driver, profile_url):
     """
     Unlike all pages
@@ -45,20 +63,14 @@ def unlike_pages(driver, profile_url):
 
     like_log, archive_likes = archiver("likes")
 
-    wait = WebDriverWait(driver, 20)
-    actions = ActionChains(driver)
-
     load_likes(driver, profile_url)
 
-    pages = driver.find_elements_by_xpath("//li//div/div/a[contains(@class, 'lfloat')]")
+    urls = get_page_links(driver)
 
-    actions = ActionChains(driver)
-
-    page_urls = [page.get_attribute("href").replace("www", "mobile") for page in pages]
-
-    for url in page_urls:
-        driver.get(url)
-
+    while urls:
+        for url in urls:
+            print(unlike_page(driver, url))
+        urls = get_page_links(driver)
 
     # Explicitly close the log file when we're done with it
     like_log.close()
