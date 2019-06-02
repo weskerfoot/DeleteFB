@@ -20,7 +20,7 @@ def load_likes(driver, profile_url):
 
     driver.get("{0}/likes_all".format(profile_url))
 
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 20)
 
     try:
         wait.until(
@@ -29,7 +29,6 @@ def load_likes(driver, profile_url):
     except SELENIUM_EXCEPTIONS:
         LOG.exception("Traceback of load_likes")
         return
-
 
 def get_page_links(driver):
     """
@@ -45,7 +44,6 @@ def get_page_links(driver):
     actions = ActionChains(driver)
 
     return [page.get_attribute("href").replace("www", "mobile") for page in pages]
-
 
 def unlike_page(driver, url, archive=None):
     """
@@ -64,7 +62,7 @@ def unlike_page(driver, url, archive=None):
 
     print("Unliking {0}".format(url))
 
-    wait = WebDriverWait(driver, 60)
+    wait = WebDriverWait(driver, 20)
 
     actions = ActionChains(driver)
 
