@@ -6,11 +6,10 @@ import json
 import os
 import sys
 
-from config import settings
-from tools.common import logger
-from tools.login import login
-from tools.wall import delete_posts
-from tools.likes import unlike_pages
+from .tools.common import logger
+from .tools.login import login
+from .tools.wall import delete_posts
+from .tools.likes import unlike_pages
 
 LOG = logger("deletefb")
 
