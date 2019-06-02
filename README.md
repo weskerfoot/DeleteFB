@@ -63,7 +63,8 @@ git+https://github.com/weskerfoot/DeleteFB.git`
 ## Unlike Pages
 * You may use `-M unlike_pages` to unlike all of your pages. The names of the
   pages will be archived (unless archival is turned off), and this option
-  conflicts with the year option.
+  conflicts with the year option. This will only unlike your *pages* that you
+  have liked. It will *not* unlike anything else (like books or movies).
 
 ## Archival
 * The tool will archive everything being deleted by default in `.log` files.
