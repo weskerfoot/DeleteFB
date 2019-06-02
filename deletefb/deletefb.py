@@ -6,6 +6,7 @@ import json
 import os
 import sys
 
+from .tools.config import settings
 from .tools.common import logger
 from .tools.login import login
 from .tools.wall import delete_posts
