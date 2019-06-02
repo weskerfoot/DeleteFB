@@ -114,7 +114,7 @@ def run_delete():
         )
 
     elif args.mode == "unlike_pages":
-        unlike_pages(driver)
+        unlike_pages(driver, args.profile_url)
     else:
         print("Please enter a valid mode")
         sys.exit(1)
