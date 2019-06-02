@@ -30,6 +30,8 @@ def delete_posts(driver,
         post_content_sel = "userContent"
         post_timestamp_sel = "timestampContent"
 
+        button_types = ["FeedDeleteOption", "HIDE_FROM_TIMELINE", "UNTAG"]
+
         wall_log, archive_wall_post = archiver("wall")
 
         while True:
@@ -47,13 +49,18 @@ def delete_posts(driver,
                 menu = driver.find_element_by_css_selector("#globalContainer > div.uiContextualLayerPositioner.uiLayer > div")
                 actions.move_to_element(menu).perform()
 
-                try:
-                    delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"FeedDeleteOption\"]")
-                except SELENIUM_EXCEPTIONS:
+                delete_button = None
+
+                for button_type in button_types:
                     try:
-                        delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"HIDE_FROM_TIMELINE\"]")
+                        delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"{0}\"]".format(button_type))
+                        break
                     except SELENIUM_EXCEPTIONS:
-                        delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"UNTAG\"]")
+                        continue
+
+                if not delete_button:
+                    print("Could not find anything to delete")
+                    break
 
                 actions.move_to_element(delete_button).click().perform()
                 confirmation_button = driver.find_element_by_class_name("layerConfirm")
