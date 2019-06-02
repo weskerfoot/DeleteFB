@@ -37,7 +37,7 @@ git+https://github.com/weskerfoot/DeleteFB.git`
     brew cask install chromedriver
     ```
 
-* Run `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"`
+* Run `deletefb -E 'youremail@example.org' -P 'yourfacebookpassword' -U 'https://www.facebook.com/your.profile.url'`
 * The script will log into your Facebook account, go to your profile page, and
   start deleting posts. If it cannot delete something, then it will "hide" it
   from your timeline instead.
