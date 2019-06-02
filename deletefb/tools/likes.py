@@ -59,6 +59,7 @@ def unlike_page(driver, url):
 
     """
     driver.get(url)
+    print(url)
     wait = WebDriverWait(driver, 30)
 
     actions = ActionChains(driver)
@@ -73,11 +74,11 @@ def unlike_page(driver, url):
     click_button(driver, button)
 
     wait.until(
-        EC.presence_of_element_located((By.XPATH, "//a/span[text()='Unlike']"))
+        EC.presence_of_element_located((By.XPATH, "//*[text()='Unlike']"))
     )
 
     # There should be an "Unlike" button now, click it
-    unlike_button = driver.find_element_by_xpath("//a/span[text()='Unlike']/..")
+    unlike_button = driver.find_element_by_xpath("//*[text()='Unlike']/..")
 
     click_button(driver, unlike_button)
 
