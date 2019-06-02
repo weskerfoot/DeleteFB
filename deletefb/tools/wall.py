@@ -1,10 +1,11 @@
 import time
 from selenium.webdriver.common.action_chains import ActionChains
 
+from .config import settings
 from .common import SELENIUM_EXCEPTIONS, archiver, click_button
 
 # Used as a threshold to avoid running forever
-MAX_POSTS = 15000
+MAX_POSTS = settings["MAX_POSTS"]
 
 def delete_posts(driver,
                  user_profile_url,

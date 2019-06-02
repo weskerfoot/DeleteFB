@@ -47,19 +47,23 @@ def get_page_links(driver):
     return [page.get_attribute("href").replace("www", "mobile") for page in pages]
 
 
-def unlike_page(driver, url):
+def unlike_page(driver, url, archive=None):
     """
     Unlikes a page given the URL to it
     Args:
         driver: seleniumrequests.Chrome Driver instance
         url: url string pointing to a page
+        archive: archiver instance
 
     Returns:
         None
 
     """
+
     driver.get(url)
-    print(url)
+
+    print("Unliking {0}".format(url))
+
     wait = WebDriverWait(driver, 30)
 
     actions = ActionChains(driver)
@@ -82,6 +86,8 @@ def unlike_page(driver, url):
 
     click_button(driver, unlike_button)
 
+    if archive:
+        archive(url)
 
 def unlike_pages(driver, profile_url):
     """
@@ -102,9 +108,9 @@ def unlike_pages(driver, profile_url):
 
     while urls:
         for url in urls:
-            unlike_page(driver, url)
-        load_likes(driver, profile_url)
+            unlike_page(driver, url, archive=archive_likes)
         try:
+            load_likes(driver, profile_url)
             urls = get_page_links(driver)
         except SELENIUM_EXCEPTIONS:
             # We're done

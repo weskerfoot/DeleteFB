@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="delete-facebook-posts",
-    version="1.1.1",
+    version="1.1.2",
     author="Wesley Kerfoot",
     author_email="wes@wesk.tech",
     description="A Selenium Script to Delete Facebook Posts",
@@ -16,7 +16,8 @@ setuptools.setup(
     install_requires = [
         "selenium",
         "selenium-requests",
-        "requests"
+        "requests",
+        "pybloom-live"
     ],
     classifiers= [
         "Programming Language :: Python :: 3",

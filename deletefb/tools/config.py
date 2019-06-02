@@ -1,3 +1,4 @@
 settings = {
-    "ARCHIVE" : True
+    "ARCHIVE" : True,
+    "MAX_POSTS" : 5000
 }

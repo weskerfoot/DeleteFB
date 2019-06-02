@@ -6,6 +6,9 @@ import time
 
 from .config import settings
 
+# Used to avoid duplicates in the log
+from pybloom_live import BloomFilter
+
 from os.path import abspath, relpath, split, isfile
 from selenium.common.exceptions import (
     NoSuchElementException,
@@ -59,8 +62,17 @@ def archiver(category):
 
     log_file = open(log_path, mode="ta", buffering=1)
 
+    bfilter = BloomFilter(
+            capacity=settings["MAX_POSTS"],
+            error_rate=0.001
+    )
+
     def log(content, timestamp=False):
         if not settings["ARCHIVE"]:
+            return
+
+        if content in bfilter:
+            # This was already archived
             return
 
         structured_content = {
@@ -70,6 +82,8 @@ def archiver(category):
         }
 
         log_file.write("{0}\n".format(json.dumps(structured_content)))
+
+        bfilter.add(content)
 
     return (log_file, log)
 
