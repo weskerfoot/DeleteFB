@@ -6,13 +6,13 @@ import json
 import os
 import sys
 
+from .tools.config import settings
 from .tools.common import logger
 from .tools.login import login
 from .tools.wall import delete_posts
 from .tools.likes import unlike_pages
 
 LOG = logger("deletefb")
-
 
 def run_delete():
     parser = argparse.ArgumentParser()
@@ -92,11 +92,7 @@ def run_delete():
 
     args = parser.parse_args()
 
-    if args.archive_off:
-        os.environ["DELETEFB_ARCHIVE"] = "false"
-    else:
-        os.environ["DELETEFB_ARCHIVE"] = "true"
-
+    settings["ARCHIVE"] = not args.archive_off
 
     if args.year and args.mode != "wall":
         parser.error("The --year option is only supported in wall mode")
@@ -111,11 +107,14 @@ def run_delete():
     )
 
     if args.mode == "wall":
-        delete_posts(driver,
-                     args.profile_url,
-                     year=args.year)
+        delete_posts(
+            driver,
+            args.profile_url,
+            year=args.year
+        )
+
     elif args.mode == "unlike_pages":
-        unlike_pages(driver)
+        unlike_pages(driver, args.profile_url)
     else:
         print("Please enter a valid mode")
         sys.exit(1)

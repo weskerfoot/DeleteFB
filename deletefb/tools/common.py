@@ -2,15 +2,19 @@ import json
 import logging
 import logging.config
 import os
-from os.path import abspath, relpath, split, isfile
 import time
 
+from .config import settings
+
+# Used to avoid duplicates in the log
+from pybloom_live import BloomFilter
+
+from os.path import abspath, relpath, split, isfile
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
     TimeoutException
 )
-
 
 SELENIUM_EXCEPTIONS = (
     NoSuchElementException,
@@ -18,13 +22,15 @@ SELENIUM_EXCEPTIONS = (
     TimeoutException
 )
 
-def try_move(actions, el):
-    for _ in range(10):
-        try:
-            actions.move_to_element(el).perform()
-        except StaleElementReferenceException:
-            time.sleep(5)
-            continue
+def click_button(driver, el):
+    """
+    Click a button using Javascript
+    Args:
+        driver: seleniumrequests.Chrome Driver instance
+    Returns:
+        None
+    """
+    driver.execute_script("arguments[0].click();", el)
 
 def logger(name):
     """
@@ -56,9 +62,19 @@ def archiver(category):
 
     log_file = open(log_path, mode="ta", buffering=1)
 
+    bfilter = BloomFilter(
+            capacity=settings["MAX_POSTS"],
+            error_rate=0.001
+    )
+
     def log(content, timestamp=False):
-        if os.environ.get("DELETEFB_ARCHIVE", "true") == "false":
+        if not settings["ARCHIVE"]:
             return
+
+        if content in bfilter:
+            # This was already archived
+            return
+
         structured_content = {
             "category" : category,
             "content" : content,
@@ -66,6 +82,8 @@ def archiver(category):
         }
 
         log_file.write("{0}\n".format(json.dumps(structured_content)))
+
+        bfilter.add(content)
 
     return (log_file, log)
 

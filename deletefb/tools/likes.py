@@ -3,12 +3,11 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from .common import SELENIUM_EXCEPTIONS, archiver, logger
+from .common import SELENIUM_EXCEPTIONS, archiver, logger, click_button
 
 LOG = logger(__name__)
 
-
-def load_likes(driver):
+def load_likes(driver, profile_url):
     """
     Loads the page that lists all pages you like
 
@@ -18,23 +17,83 @@ def load_likes(driver):
     Returns:
         None
     """
-    driver.get("https://www.facebook.com/pages/?category=liked")
 
-    wait = WebDriverWait(driver, 20)
+    driver.get("{0}/likes_all".format(profile_url))
+
+    wait = WebDriverWait(driver, 30)
 
     try:
         wait.until(
-            EC.presence_of_element_located((By.XPATH, "//button/div/div[text()='Liked']"))
-        )
-
-        wait.until(
-            EC.presence_of_element_located((By.XPATH, "//button/div/i[@aria-hidden=\"true\"]"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".PageLikeButton"))
         )
     except SELENIUM_EXCEPTIONS:
         LOG.exception("Traceback of load_likes")
         return
 
-def unlike_pages(driver):
+
+def get_page_links(driver):
+    """
+    Gets all of the links to the pages you like
+
+    Args:
+        driver: seleniumrequests.Chrome Driver instance
+    Returns:
+        List of URLs to pages
+    """
+    pages = driver.find_elements_by_xpath("//li//div/div/a[contains(@class, 'lfloat')]")
+
+    actions = ActionChains(driver)
+
+    return [page.get_attribute("href").replace("www", "mobile") for page in pages]
+
+
+def unlike_page(driver, url, archive=None):
+    """
+    Unlikes a page given the URL to it
+    Args:
+        driver: seleniumrequests.Chrome Driver instance
+        url: url string pointing to a page
+        archive: archiver instance
+
+    Returns:
+        None
+
+    """
+
+    driver.get(url)
+
+    print("Unliking {0}".format(url))
+
+    wait = WebDriverWait(driver, 60)
+
+    actions = ActionChains(driver)
+
+    try:
+        wait.until(
+            EC.presence_of_element_located((By.XPATH, "//*[text()='Liked']"))
+        )
+    except SELENIUM_EXCEPTIONS:
+        # Something went wrong with this page, so skip it
+        return
+
+    button = driver.find_element_by_xpath("//*[text()='Liked']")
+
+    # Click the "Liked" button to open up "Unlike"
+    click_button(driver, button)
+
+    wait.until(
+        EC.presence_of_element_located((By.XPATH, "//*[text()='Unlike']"))
+    )
+
+    # There should be an "Unlike" button now, click it
+    unlike_button = driver.find_element_by_xpath("//*[text()='Unlike']/..")
+
+    click_button(driver, unlike_button)
+
+    if archive:
+        archive(url)
+
+def unlike_pages(driver, profile_url):
     """
     Unlike all pages
 
@@ -47,39 +106,18 @@ def unlike_pages(driver):
 
     like_log, archive_likes = archiver("likes")
 
-    actions = ActionChains(driver)
+    load_likes(driver, profile_url)
 
-    load_likes(driver)
+    urls = get_page_links(driver)
 
-    pages_list = driver.find_element_by_css_selector("#all_liked_pages")
-
-    actions.move_to_element(pages_list).perform()
-
-    unlike_buttons = pages_list.find_elements_by_xpath("//button/div/div[text()='Liked']/../..")
-
-    while unlike_buttons:
-        for button in unlike_buttons:
-            try:
-                if "Liked" in button.text:
-                    page_name = button.find_element_by_xpath("./../..").text.split("\n")[0]
-
-                    driver.execute_script("arguments[0].click();", button)
-
-                    archive_likes(page_name)
-
-                    print("{0} was unliked".format(page_name))
-
-            except SELENIUM_EXCEPTIONS:
-                continue
-
-        load_likes(driver)
+    while urls:
+        for url in urls:
+            unlike_page(driver, url, archive=archive_likes)
         try:
-            pages_list = driver.find_element_by_css_selector("#all_liked_pages")
-            actions.move_to_element(pages_list).perform()
-            unlike_buttons = pages_list.find_elements_by_xpath("//button")
-            if not unlike_buttons:
-                break
+            load_likes(driver, profile_url)
+            urls = get_page_links(driver)
         except SELENIUM_EXCEPTIONS:
+            # We're done
             break
 
     # Explicitly close the log file when we're done with it
