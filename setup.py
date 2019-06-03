@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="delete-facebook-posts",
-    version="1.1.3",
+    version="1.1.4",
     author="Wesley Kerfoot",
     author_email="wes@wesk.tech",
     description="A Selenium Script to Delete Facebook Posts",
