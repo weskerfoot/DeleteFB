@@ -27,7 +27,7 @@
         "level": "INFO",
         "class": "logging.handlers.WatchedFileHandler",
         "formatter": "verbose",
-        "filename": "deletefb/deletefb.log",
+        "filename": "./deletefb.log",
         "mode": "a",
         "encoding": "utf-8"
       }

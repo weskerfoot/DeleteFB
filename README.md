@@ -45,7 +45,7 @@ git+https://github.com/weskerfoot/DeleteFB.git`
   everything. You may safely minimize the chrome window without breaking it.
 
 ## 2FA
-* It is recommended that you disable Two-Factor Authentication tempoprarily
+* It is recommended that you disable Two-Factor Authentication temporarily
   while you are running the script, in order to get the best experience.
 
 * If you run into issues with Facebook complaining about your browser,
