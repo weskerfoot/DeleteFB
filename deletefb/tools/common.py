@@ -40,7 +40,11 @@ def logger(name):
     Returns:
         logging.Logger
     """
-    config_path = "deletefb/logging_conf.json"
+
+    # Make sure the path always points to the correct directory
+    config_path = os.path.dirname(
+                    os.path.realpath(__file__)) + "/../logging_conf.json"
+
     if not isfile(config_path):  # called from file (deletefb.py)
         os.chdir("..")
     with open(config_path, "r", encoding="utf-8") as config_file:
