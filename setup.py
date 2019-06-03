@@ -15,7 +15,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     package_data={
-        # If any package contains *.txt or *.rst files, include them:
+        # Include *json files in the package:
         '': ['*.json'],
     },
     install_requires = [
