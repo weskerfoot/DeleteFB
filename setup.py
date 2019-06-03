@@ -13,6 +13,11 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/weskerfoot/DeleteFB",
     packages=setuptools.find_packages(),
+    include_package_data=True,
+    package_data={
+        # If any package contains *.txt or *.rst files, include them:
+        '': ['*.json'],
+    },
     install_requires = [
         "selenium",
         "selenium-requests",
