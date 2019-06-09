@@ -36,8 +36,7 @@ def logger(name):
     """
 
     # Make sure the path always points to the correct directory
-    config_path = os.path.dirname(
-                    os.path.realpath(__file__)) + "/../logging_conf.json"
+    config_path = os.path.dirname(os.path.realpath(__file__)) + "/../logging_conf.json"
 
     if not isfile(config_path):  # called from file (deletefb.py)
         os.chdir("..")
@@ -45,7 +44,6 @@ def logger(name):
         config = json.load(config_file)
         logging.config.dictConfig(config["logging"])
     return logging.getLogger(name)
-
 
 NO_CHROME_DRIVER = """
 You need to install the chromedriver for Selenium\n

@@ -112,4 +112,3 @@ def unlike_pages(driver, profile_url):
             except SELENIUM_EXCEPTIONS:
                 # We're done
                 break
-

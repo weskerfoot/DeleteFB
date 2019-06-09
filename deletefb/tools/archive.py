@@ -9,9 +9,9 @@ from pybloom_live import BloomFilter
 
 def make_filter():
     return BloomFilter(
-            capacity=settings["MAX_POSTS"],
-            error_rate=0.001
-        )
+        capacity=settings["MAX_POSTS"],
+        error_rate=0.001
+    )
 
 @attr.s
 class Archive:
@@ -33,15 +33,19 @@ class Archive:
         if content.name not in self._bloom_filter:
             self.archive_file.write(json.dumps(attr.asdict(content)) + "\n")
             self._bloom_filter.add(content.name)
-        return 
+        return
 
 @contextmanager
 def archiver(archive_type):
-    archive_file = open("./%s.log" % archive_type, mode="ta", buffering=1)
+    archive_file = open(
+        "./{0}.log".format(archive_type),
+        mode="ta",
+        buffering=1
+    )
 
     archiver_instance = Archive(
-            archive_type=archive_type,
-            archive_file=archive_file
+        archive_type=archive_type,
+        archive_file=archive_file
     )
 
     try:
