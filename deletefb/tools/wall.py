@@ -1,4 +1,4 @@
-from .archive import archiver, Post
+from .archive import archiver
 from .common import SELENIUM_EXCEPTIONS, click_button
 from .config import settings
 from selenium.webdriver.common.action_chains import ActionChains

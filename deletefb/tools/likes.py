@@ -4,15 +4,17 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+
 import attr
+import datetime
 
 LOG = logger(__name__)
 
 # Data type definitions of posts and comments
 @attr.s
 class Page:
-    date = attr.ib(factory=datetime.datetime.now)
     name = attr.ib()
+    date = attr.ib(factory=datetime.datetime.now)
 
 def load_likes(driver, profile_url):
     """

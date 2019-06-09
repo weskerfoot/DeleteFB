@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 from .tools.common import logger
 from .tools.config import settings
 from .tools.likes import unlike_pages
