@@ -1,6 +1,5 @@
 from .config import settings
 from contextlib import contextmanager
-from pathlib import Path
 
 import attr
 import json

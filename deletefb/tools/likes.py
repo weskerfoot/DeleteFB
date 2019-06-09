@@ -1,7 +1,6 @@
 from .archive import archiver
 from ..types import Page
 from .common import SELENIUM_EXCEPTIONS, logger, click_button
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -42,8 +41,6 @@ def get_page_links(driver):
     """
     pages = driver.find_elements_by_xpath("//li//div/div/a[contains(@class, 'lfloat')]")
 
-    actions = ActionChains(driver)
-
     return [page.get_attribute("href").replace("www", "mobile") for page in pages]
 
 def unlike_page(driver, url, archive=None):
@@ -64,8 +61,6 @@ def unlike_page(driver, url, archive=None):
     print("Unliking {0}".format(url))
 
     wait = WebDriverWait(driver, 20)
-
-    actions = ActionChains(driver)
 
     try:
         wait.until(

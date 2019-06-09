@@ -7,8 +7,6 @@ from .tools.wall import delete_posts
 
 import argparse
 import getpass
-import json
-import os
 import sys
 
 LOG = logger("deletefb")
