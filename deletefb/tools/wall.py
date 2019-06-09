@@ -1,10 +1,9 @@
 from .archive import archiver
-from .common import SELENIUM_EXCEPTIONS, click_button
+from .common import SELENIUM_EXCEPTIONS, click_button, timestamp_now
 from .config import settings
 from selenium.webdriver.common.action_chains import ActionChains
 
 import attr
-import datetime
 import time
 import uuid
 
@@ -13,14 +12,14 @@ import uuid
 class Post:
     content = attr.ib()
     comments = attr.ib(default=[])
-    date = attr.ib(factory=datetime.datetime.now)
+    date = attr.ib(factory=timestamp_now)
     name = attr.ib(factory=lambda: uuid.uuid4().hex)
 
 @attr.s
 class Comment:
     commenter = attr.ib()
     content = attr.ib()
-    date = attr.ib(factory=datetime.datetime.now)
+    date = attr.ib(factory=timestamp_now)
     name = attr.ib(factory=lambda: uuid.uuid4().hex)
 
 # Used as a threshold to avoid running forever

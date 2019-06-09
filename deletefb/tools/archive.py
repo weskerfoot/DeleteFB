@@ -32,7 +32,7 @@ class Archive:
         print("Archiving {0}".format(content))
 
         if content.name not in self._bloom_filter:
-            self.archive_file.write(json.dumps(attr.asdict(content)))
+            self.archive_file.write(json.dumps(attr.asdict(content)) + "\n")
             self._bloom_filter.add(content.name)
         return 
 

@@ -1,12 +1,11 @@
 from .archive import archiver
-from .common import SELENIUM_EXCEPTIONS, logger, click_button
+from .common import SELENIUM_EXCEPTIONS, logger, click_button, timestamp_now
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 import attr
-import datetime
 
 LOG = logger(__name__)
 
@@ -14,7 +13,7 @@ LOG = logger(__name__)
 @attr.s
 class Page:
     name = attr.ib()
-    date = attr.ib(factory=datetime.datetime.now)
+    date = attr.ib(factory=timestamp_now)
 
 def load_likes(driver, profile_url):
     """
