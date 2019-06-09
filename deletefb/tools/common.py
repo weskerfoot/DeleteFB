@@ -1,17 +1,16 @@
-import json
-import logging
-import logging.config
-import os
-import time
-
 from .config import settings
-
 from os.path import abspath, relpath, split, isfile
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
     TimeoutException
 )
+
+import json
+import logging
+import logging.config
+import os
+import time
 
 SELENIUM_EXCEPTIONS = (
     NoSuchElementException,

@@ -1,12 +1,18 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-from .common import SELENIUM_EXCEPTIONS, logger, click_button
 from .archive import archiver
+from .common import SELENIUM_EXCEPTIONS, logger, click_button
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+import attr
 
 LOG = logger(__name__)
+
+# Data type definitions of posts and comments
+@attr.s
+class Page:
+    date = attr.ib(factory=datetime.datetime.now)
+    name = attr.ib()
 
 def load_likes(driver, profile_url):
     """
@@ -90,7 +96,7 @@ def unlike_page(driver, url, archive=None):
     click_button(driver, unlike_button)
 
     if archive:
-        archive(url)
+        archive(Page(name=url))
 
 def unlike_pages(driver, profile_url):
     """
