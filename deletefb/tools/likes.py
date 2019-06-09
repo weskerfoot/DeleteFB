@@ -3,7 +3,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from .common import SELENIUM_EXCEPTIONS, archiver, logger, click_button
+from .common import SELENIUM_EXCEPTIONS, logger, click_button
+from .archive import archiver
 
 LOG = logger(__name__)
 
@@ -102,21 +103,18 @@ def unlike_pages(driver, profile_url):
         None
     """
 
-    like_log, archive_likes = archiver("likes")
+    with archiver("likes") as archive_likes:
+        load_likes(driver, profile_url)
 
-    load_likes(driver, profile_url)
+        urls = get_page_links(driver)
 
-    urls = get_page_links(driver)
+        while urls:
+            for url in urls:
+                unlike_page(driver, url, archive=archive_likes.archive)
+            try:
+                load_likes(driver, profile_url)
+                urls = get_page_links(driver)
+            except SELENIUM_EXCEPTIONS:
+                # We're done
+                break
 
-    while urls:
-        for url in urls:
-            unlike_page(driver, url, archive=archive_likes)
-        try:
-            load_likes(driver, profile_url)
-            urls = get_page_links(driver)
-        except SELENIUM_EXCEPTIONS:
-            # We're done
-            break
-
-    # Explicitly close the log file when we're done with it
-    like_log.close()

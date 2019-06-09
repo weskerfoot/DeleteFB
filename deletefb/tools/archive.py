@@ -11,7 +11,6 @@ from pathlib import Path
 from pybloom_live import BloomFilter
 
 def acquire_path():
-
     log_file = open(log_path, mode="ta", buffering=1)
 
     bfilter = BloomFilter(
@@ -26,14 +25,15 @@ class Post:
     content = attr.ib()
     comments = attr.ib(default=[])
     date = attr.ib(factory=datetime.datetime.now)
-    name = attr.ib(factory=uuid.uuid4)
+    name = attr.ib(factory=lambda: uuid.uuid4().hex)
+
 
 @attr.s
 class Comment:
     commenter = attr.ib()
     content = attr.ib()
     date = attr.ib(factory=datetime.datetime.now)
-    name = attr.ib(factory=uuid.uuid4)
+    name = attr.ib(factory=lambda: uuid.uuid4().hex)
 
 @attr.s
 class Archive:
@@ -46,12 +46,23 @@ class Archive:
 
     def archive(self, content):
         # do something
-        print("Archiving type {0} with content {1} to directory {2}".format(self.archive_type, content, self.archive_dir))
-        self.archive_file.write(json.dumps(content.asdict()))
+        print("Archiving type {0} with content {1} to file".format(self.archive_type, content))
+        self.archive_file.write(json.dumps(attr.asdict(content)))
 
-wall_archive = Archive(archive_type="wall")
+    def close(self):
+        self.archive_file.close()
 
-comments = [Comment(commenter="Bob", content="Nice post!"),
-            Comment(commenter="Alice", content="I hate this")]
+@contextmanager
+def archiver(archive_type):
+    archiver_instance = Archive(archive_type=archive_type,
+                                archive_file=open(
+                                    "./%s.log" % archive_type,
+                                    mode="ta",
+                                    buffering=1
+                                    )
+                                )
 
-wall_archive.archive(Post(content="A post!", comments=comments))
+    try:
+        yield archiver_instance
+    finally:
+        archiver_instance.close()
