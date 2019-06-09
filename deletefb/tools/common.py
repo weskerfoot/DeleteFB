@@ -6,7 +6,6 @@ from selenium.common.exceptions import (
     TimeoutException
 )
 
-import datetime
 import json
 import logging
 import logging.config
@@ -18,12 +17,6 @@ SELENIUM_EXCEPTIONS = (
     StaleElementReferenceException,
     TimeoutException
 )
-
-def timestamp_now():
-    """
-    Returns: a timestamp for this instant, in ISO 8601 format
-    """
-    return datetime.datetime.isoformat(datetime.datetime.now())
 
 def click_button(driver, el):
     """

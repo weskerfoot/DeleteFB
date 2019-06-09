@@ -1,26 +1,10 @@
+from ..types import Post
 from .archive import archiver
-from .common import SELENIUM_EXCEPTIONS, click_button, timestamp_now
+from .common import SELENIUM_EXCEPTIONS, click_button
 from .config import settings
 from selenium.webdriver.common.action_chains import ActionChains
 
-import attr
 import time
-import uuid
-
-# Data type definitions of posts and comments
-@attr.s
-class Post:
-    content = attr.ib()
-    comments = attr.ib(default=[])
-    date = attr.ib(factory=timestamp_now)
-    name = attr.ib(factory=lambda: uuid.uuid4().hex)
-
-@attr.s
-class Comment:
-    commenter = attr.ib()
-    content = attr.ib()
-    date = attr.ib(factory=timestamp_now)
-    name = attr.ib(factory=lambda: uuid.uuid4().hex)
 
 # Used as a threshold to avoid running forever
 MAX_POSTS = settings["MAX_POSTS"]

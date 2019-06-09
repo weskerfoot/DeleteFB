@@ -1,19 +1,12 @@
 from .archive import archiver
-from .common import SELENIUM_EXCEPTIONS, logger, click_button, timestamp_now
+from ..types import Page
+from .common import SELENIUM_EXCEPTIONS, logger, click_button
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-import attr
-
 LOG = logger(__name__)
-
-# Data type definitions of posts and comments
-@attr.s
-class Page:
-    name = attr.ib()
-    date = attr.ib(factory=timestamp_now)
 
 def load_likes(driver, profile_url):
     """
