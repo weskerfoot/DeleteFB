@@ -1,9 +1,9 @@
+from .archive import archiver
+from ..types import Page
+from .common import SELENIUM_EXCEPTIONS, logger, click_button
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-from .common import SELENIUM_EXCEPTIONS, archiver, logger, click_button
+from selenium.webdriver.support.ui import WebDriverWait
 
 LOG = logger(__name__)
 
@@ -41,8 +41,6 @@ def get_page_links(driver):
     """
     pages = driver.find_elements_by_xpath("//li//div/div/a[contains(@class, 'lfloat')]")
 
-    actions = ActionChains(driver)
-
     return [page.get_attribute("href").replace("www", "mobile") for page in pages]
 
 def unlike_page(driver, url, archive=None):
@@ -63,8 +61,6 @@ def unlike_page(driver, url, archive=None):
     print("Unliking {0}".format(url))
 
     wait = WebDriverWait(driver, 20)
-
-    actions = ActionChains(driver)
 
     try:
         wait.until(
@@ -89,7 +85,7 @@ def unlike_page(driver, url, archive=None):
     click_button(driver, unlike_button)
 
     if archive:
-        archive(url)
+        archive(Page(name=url))
 
 def unlike_pages(driver, profile_url):
     """
@@ -102,21 +98,17 @@ def unlike_pages(driver, profile_url):
         None
     """
 
-    like_log, archive_likes = archiver("likes")
+    with archiver("likes") as archive_likes:
+        load_likes(driver, profile_url)
 
-    load_likes(driver, profile_url)
+        urls = get_page_links(driver)
 
-    urls = get_page_links(driver)
-
-    while urls:
-        for url in urls:
-            unlike_page(driver, url, archive=archive_likes)
-        try:
-            load_likes(driver, profile_url)
-            urls = get_page_links(driver)
-        except SELENIUM_EXCEPTIONS:
-            # We're done
-            break
-
-    # Explicitly close the log file when we're done with it
-    like_log.close()
+        while urls:
+            for url in urls:
+                unlike_page(driver, url, archive=archive_likes.archive)
+            try:
+                load_likes(driver, profile_url)
+                urls = get_page_links(driver)
+            except SELENIUM_EXCEPTIONS:
+                # We're done
+                break

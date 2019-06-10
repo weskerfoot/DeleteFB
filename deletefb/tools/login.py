@@ -1,12 +1,10 @@
-import time
-import sys
-
+from .common import NO_CHROME_DRIVER
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 from seleniumrequests import Chrome
 
-from .common import NO_CHROME_DRIVER
-
+import sys
+import time
 
 def login(user_email_address,
           user_password,
