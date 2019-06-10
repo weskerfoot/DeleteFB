@@ -1,5 +1,6 @@
 from .config import settings
 from contextlib import contextmanager
+from pathlib import Path
 
 import attr
 import json
@@ -18,8 +19,6 @@ class Archive:
     archive_type = attr.ib()
 
     # We give the Archive class a file handle
-    # This is better because the archive function
-    # should not know about anything related to filesystem paths
     archive_file = attr.ib()
 
     _bloom_filter = attr.ib(factory=make_filter)
@@ -37,8 +36,9 @@ class Archive:
 
 @contextmanager
 def archiver(archive_type):
+
     archive_file = open(
-        "./{0}.log".format(archive_type),
+        (Path(".") / Path(archive_type).name).with_suffix(".log"),
         mode="ta",
         buffering=1
     )
