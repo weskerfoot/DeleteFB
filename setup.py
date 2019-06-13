@@ -22,7 +22,8 @@ setuptools.setup(
         "selenium",
         "selenium-requests",
         "requests",
-        "pybloom-live"
+        "pybloom-live",
+        "attrs"
     ],
     classifiers= [
         "Programming Language :: Python :: 3",
