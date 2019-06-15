@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="delete-facebook-posts",
-    version="1.1.5",
+    version="1.1.6",
     author="Wesley Kerfoot",
     author_email="wes@wesk.tech",
     description="A Selenium Script to Delete Facebook Posts",
@@ -14,6 +14,7 @@ setuptools.setup(
     url="https://github.com/weskerfoot/DeleteFB",
     packages=setuptools.find_packages(),
     include_package_data=True,
+    requires_python=">=3.6",
     package_data={
         # Include *json files in the package:
         '': ['*.json'],
