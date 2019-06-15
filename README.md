@@ -19,13 +19,15 @@ Personally, I did this so I would feel less attached to my Facebook profile
 
 ## Installation
 You have several options to run it.
-1) Install from PyPI with `pip install --user delete-facebook-posts`
-2) Clone this repo and run `pip install --user .` or do `pip install --user
+1) Install from PyPI with `pip3 install --user delete-facebook-posts`
+2) Clone this repo and run `pip3 install --user .` or do `pip3 install --user
 git+https://github.com/weskerfoot/DeleteFB.git`
-3) Set up a Python virtualenv, activate it, and run `pip install -r requirements.txt`, then you can just run `python -m deletefb.deletefb` in the DeleteFB directory.
+3) Set up a Python virtualenv, activate it, and run `pip3 install -r requirements.txt`, then you can just run `python -m deletefb.deletefb` in the DeleteFB directory.
 
 ## How To Use It
 
+* Make sure that you have a recent version of Python 3.x installed (preferably
+  3.6 or greater)
 * Make sure that you have Google Chrome installed and that it is up to date
 * Also install the chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/home) for an explanation of what the chromedriver does.
   * On Linux, it will be called something like `chromium-chromedriver` or just
