@@ -47,12 +47,7 @@ git+https://github.com/weskerfoot/DeleteFB.git`
   everything. You may safely minimize the chrome window without breaking it.
 
 ## Login
-* The tool will log in using the credentials passed to it. It will wait until
-  the page "https://www.facebook.com/" is loaded in order to avoid any issues
-  with logging in. If you pass a 2FA token explicitly with the `-F` option,
-  then it will try to enter that for you. If there are any issues, it simply
-  pauses indefinitely to allow the user to resolve the problems, and then
-  continues execution.
+* The tool will log in using the credentials passed to it. It will wait until the page `https://www.facebook.com/` is loaded in order to avoid any issues with logging in. If you pass a 2FA token explicitly with the `-F` option, then it will try to enter that for you. If there are any issues, it simply pauses indefinitely to allow the user to resolve the problems, and then continues execution.
 
 ## 2FA
 * It is recommended that you disable Two-Factor Authentication temporarily
