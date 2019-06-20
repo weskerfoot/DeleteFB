@@ -1,12 +1,10 @@
-import time
-import sys
-
+from .common import NO_CHROME_DRIVER
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 from seleniumrequests import Chrome
 
-from .common import NO_CHROME_DRIVER
-
+import sys
+import time
 
 def login(user_email_address,
           user_password,
@@ -47,7 +45,7 @@ def login(user_email_address,
 
     driver.implicitly_wait(10)
 
-    driver.get("https://facebook.com")
+    driver.get("https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&lwv=110")
 
     email = "email"
     password = "pass"
@@ -98,5 +96,11 @@ def login(user_email_address,
         print("Continuing execution")
     else:
         pass
+
+    # block until we have reached the main page
+    # print a message warning the user
+    while driver.current_url != "https://www.facebook.com/":
+        print("Execution blocked: Please navigate to https://www.facebook.com to continue")
+        time.sleep(5)
 
     return driver

@@ -19,13 +19,15 @@ Personally, I did this so I would feel less attached to my Facebook profile
 
 ## Installation
 You have several options to run it.
-1) Install from PyPI with `pip install --user delete-facebook-posts`
-2) Clone this repo and run `pip install --user .` or do `pip install --user
+1) Install from PyPI with `pip3 install --user delete-facebook-posts`
+2) Clone this repo and run `pip3 install --user .` or do `pip3 install --user
 git+https://github.com/weskerfoot/DeleteFB.git`
-3) Set up a Python virtualenv, activate it, and run `pip install -r requirements.txt`, then you can just run `python -m deletefb.deletefb` in the DeleteFB directory.
+3) Set up a Python virtualenv, activate it, and run `pip3 install -r requirements.txt`, then you can just run `python -m deletefb.deletefb` in the DeleteFB directory.
 
 ## How To Use It
 
+* Make sure that you have a recent version of Python 3.x installed (preferably
+  3.6 or greater)
 * Make sure that you have Google Chrome installed and that it is up to date
 * Also install the chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/home) for an explanation of what the chromedriver does.
   * On Linux, it will be called something like `chromium-chromedriver` or just
@@ -37,15 +39,18 @@ git+https://github.com/weskerfoot/DeleteFB.git`
     brew cask install chromedriver
     ```
 
-* Run `deletefb -E "youremail@example.org" -P "yourfacebookpassword" -U "https://www.facebook.com/your.profile.url"`
+* Run `deletefb -E 'youremail@example.org' -P 'yourfacebookpassword' -U 'https://www.facebook.com/your.profile.url'`
 * The script will log into your Facebook account, go to your profile page, and
   start deleting posts. If it cannot delete something, then it will "hide" it
   from your timeline instead.
 * Be patient as it will take a very long time, but it will eventually clear
   everything. You may safely minimize the chrome window without breaking it.
 
+## Login
+* The tool will log in using the credentials passed to it. It will wait until the page `https://www.facebook.com/` is loaded in order to avoid any issues with logging in. If you pass a 2FA token explicitly with the `-F` option, then it will try to enter that for you. If there are any issues, it simply pauses indefinitely to allow the user to resolve the problems, and then continues execution.
+
 ## 2FA
-* It is recommended that you disable Two-Factor Authentication tempoprarily
+* It is recommended that you disable Two-Factor Authentication temporarily
   while you are running the script, in order to get the best experience.
 
 * If you run into issues with Facebook complaining about your browser,
@@ -63,7 +68,8 @@ git+https://github.com/weskerfoot/DeleteFB.git`
 ## Unlike Pages
 * You may use `-M unlike_pages` to unlike all of your pages. The names of the
   pages will be archived (unless archival is turned off), and this option
-  conflicts with the year option.
+  conflicts with the year option. This will only unlike your *pages* that you
+  have liked. It will *not* unlike anything else (like books or movies).
 
 ## Archival
 * The tool will archive everything being deleted by default in `.log` files.

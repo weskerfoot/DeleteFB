@@ -1,0 +1,62 @@
+{
+  "logging": {
+    "version": 1,
+    "disable_existing_loggers": true,
+    "formatters": {
+      "brief": {
+        "class": "logging.Formatter",
+        "style": "{",
+        "datefmt": "%H:%M:%S",
+        "format": "{name:s}-{levelname:s}-{asctime:s}-{message:s}"
+      },
+      "verbose": {
+        "class": "logging.Formatter",
+        "style": "{",
+        "datefmt": "%Y-%m-%dT%H:%M:%S",
+        "format": "{name:s}:{levelname:s}:L{lineno:d} {asctime:s} {message:s}"
+      }
+    },
+    "handlers": {
+      "console": {
+        "level": "DEBUG",
+        "class": "logging.StreamHandler",
+        "formatter": "brief",
+        "stream": "ext://sys.stdout"
+      },
+      "file_handler": {
+        "level": "INFO",
+        "class": "logging.handlers.WatchedFileHandler",
+        "formatter": "verbose",
+        "filename": "./deletefb.log",
+        "mode": "a",
+        "encoding": "utf-8"
+      }
+    },
+    "loggers": {
+      "root": {
+        "level": "DEBUG",
+        "handlers": ["console", "file_handler"]
+      },
+      "deletefb": {
+        "level": "DEBUG",
+        "handlers": ["console"],
+        "propagate": false
+      },
+      "login": {
+        "level": "DEBUG",
+        "handlers": ["file_handler"],
+        "propagate": false
+      },
+      "likes": {
+        "level": "DEBUG",
+        "handlers": ["file_handler"],
+        "propagate": false
+      },
+      "wall": {
+        "level": "DEBUG",
+        "handlers": ["file_handler"],
+        "propagate": false
+      }
+    }
+  }
+}
