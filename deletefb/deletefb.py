@@ -4,6 +4,8 @@ from .tools.config import settings
 from .tools.likes import unlike_pages
 from .tools.login import login
 from .tools.wall import delete_posts
+from .tools.conversations import delete_conversations
+from .tools.comments import delete_comments
 
 import argparse
 import getpass
@@ -21,7 +23,7 @@ def run_delete():
         default="wall",
         dest="mode",
         type=str,
-        choices=["wall", "unlike_pages"],
+        choices=["wall", "unlike_pages", "comments", "conversations"],
         help="The mode you want to run in. Default is `wall' which deletes wall posts"
     )
 
@@ -112,6 +114,13 @@ def run_delete():
 
     elif args.mode == "unlike_pages":
         unlike_pages(driver, args.profile_url)
+
+    elif args.mode == "comments":
+        delete_comments(driver, args.profile_url)
+
+    elif args.mode == "conversations":
+        delete_conversations(driver)
+
     else:
         print("Please enter a valid mode")
         sys.exit(1)

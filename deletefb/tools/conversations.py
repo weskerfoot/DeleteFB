@@ -7,9 +7,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 LOG = logger(__name__)
 
-def delete_comments(driver):
+def delete_conversations(driver):
     """
     Remove all conversations within a specified range
     """
 
-    driver.get("https://www.facebook.com/messages/t/"
+    driver.get("https://www.facebook.com/messages/t/")
