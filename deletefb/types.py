@@ -24,6 +24,12 @@ class Comment:
     name = attr.ib(factory=lambda: uuid.uuid4().hex)
 
 @attr.s
+class Conversation:
+    recipient = attr.ib()
+    last_message_time = attr.ib(factory=timestamp_now)
+    name = attr.ib()
+
+@attr.s
 class Page:
     name = attr.ib()
     date = attr.ib(factory=timestamp_now)
