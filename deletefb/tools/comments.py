@@ -13,3 +13,5 @@ def delete_comments(driver, profile_url):
     """
 
     driver.get("{0}/allactivity?privacy_source=activity_log&category_key=commentscluster".format(profile_url))
+
+    wait = WebDriverWait(driver, 20)
