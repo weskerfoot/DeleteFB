@@ -2,7 +2,8 @@ from os.path import isfile
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
-    TimeoutException
+    TimeoutException,
+    JavascriptException
 )
 
 import json
@@ -19,12 +20,17 @@ SELENIUM_EXCEPTIONS = (
 def click_button(driver, el):
     """
     Click a button using Javascript
-    Args:
-        driver: seleniumrequests.Chrome Driver instance
-    Returns:
-        None
     """
     driver.execute_script("arguments[0].click();", el)
+
+def scroll_to(driver, el):
+    """
+    Scroll an element into view, using JS
+    """
+    try:
+        driver.execute_script("arguments[0].scrollIntoView();", el)
+    except SELENIUM_EXCEPTIONS:
+        return
 
 def logger(name):
     """
