@@ -1,8 +1,8 @@
-# docker build -t DeleteFB . && \
+# docker build -t deletefb . && \
 # docker run -ti --rm \
 #        -e DISPLAY=$DISPLAY \
 #        -v /tmp/.X11-unix:/tmp/.X11-unix \
-#        DeleteFB
+#        deletefb
 
 
 FROM ubuntu:bionic
@@ -32,10 +32,39 @@ FROM ubuntu:bionic
     chown ${uid}:${gid} -R /home/${user} && \
     usermod -aG sudo ${user}
 
-# delete FB repo
+# Install Chrome
+RUN apt-get update && apt-get install -y \
+	apt-transport-https \
+	ca-certificates \
+	curl \
+	gnupg \
+	hicolor-icon-theme \
+	libcanberra-gtk* \
+	libgl1-mesa-dri \
+	libgl1-mesa-glx \
+	libpango1.0-0 \
+	libpulse0 \
+	libv4l-0 \
+	fonts-symbola \
+	--no-install-recommends \
+	&& curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+	&& echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list \
+	&& apt-get update && apt-get install -y \
+	google-chrome-stable \
+	--no-install-recommends && \
+	rm -rf /var/lib/apt/lists/*
+
+COPY local.conf /etc/fonts/local.conf
+
+
+# delete FB repo install
+
+
     RUN pip3 install --user delete-facebook-posts
     RUN pip3 install --user git+https://github.com/weskerfoot/DeleteFB.git
     RUN git clone https://github.com/weskerfoot/DeleteFB.git
     WORKDIR ./DeleteFB
     RUN pip3 install -r requirements.txt
     CMD python3 -m ./deletefb/deletefb.py    
+
+        USER ${user}
