@@ -1,0 +1,41 @@
+# docker build -t DeleteFB . && \
+# docker run -ti --rm \
+#        -e DISPLAY=$DISPLAY \
+#        -v /tmp/.X11-unix:/tmp/.X11-unix \
+#        DeleteFB
+
+
+FROM ubuntu:bionic
+
+# Update and apt install
+    # add your own sources.list file here in order to speed up the build
+    ADD sources.list /etc/apt/sources.list
+
+    RUN apt-get update &&  \
+     apt-get install -y firefox \
+     git \
+     python3 \
+     python3-pip \
+     libcanberra-gtk-module \
+     curl \ 
+     sudo \ 
+     vim 
+
+# creating user
+    ENV user username
+    RUN export uid=1000 gid=1000 && \
+    mkdir -p /home/${user} && \
+    echo "${user}:x:${uid}:${gid}:${user},,,:/home/${user}:/bin/bash" >> /etc/passwd && \
+    echo "${user}:x:${uid}:" >> /etc/group && \
+    echo "${user} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${user} && \
+    chmod 0440 /etc/sudoers.d/${user} && \
+    chown ${uid}:${gid} -R /home/${user} && \
+    usermod -aG sudo ${user}
+
+# delete FB repo
+    RUN pip3 install --user delete-facebook-posts
+    RUN pip3 install --user git+https://github.com/weskerfoot/DeleteFB.git
+    RUN git clone https://github.com/weskerfoot/DeleteFB.git
+    WORKDIR ./DeleteFB
+    RUN pip3 install -r requirements.txt
+    CMD python3 -m ./deletefb/deletefb.py    
