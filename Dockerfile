@@ -31,15 +31,15 @@ FROM ubuntu:bionic
      vim 
 
 # creating user
-    ENV user username
-    RUN export uid=1000 gid=1000 && \
-    mkdir -p /home/${user} && \
-    echo "${user}:x:${uid}:${gid}:${user},,,:/home/${user}:/bin/bash" >> /etc/passwd && \
-    echo "${user}:x:${uid}:" >> /etc/group && \
-    echo "${user} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${user} && \
-    chmod 0440 /etc/sudoers.d/${user} && \
-    chown ${uid}:${gid} -R /home/${user} && \
-    usermod -aG sudo ${user}
+    # ENV user username
+    # RUN export uid=1000 gid=1000 && \
+    # mkdir -p /home/${user} && \
+    # echo "${user}:x:${uid}:${gid}:${user},,,:/home/${user}:/bin/bash" >> /etc/passwd && \
+    # echo "${user}:x:${uid}:" >> /etc/group && \
+    # echo "${user} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${user} && \
+    # chmod 0440 /etc/sudoers.d/${user} && \
+    # chown ${uid}:${gid} -R /home/${user} && \
+    # usermod -aG sudo ${user}
 
 # Install Chrome
 RUN apt-get update && apt-get install -y \
@@ -74,6 +74,7 @@ COPY local.conf /etc/fonts/local.conf
     RUN git clone https://github.com/weskerfoot/DeleteFB.git
     WORKDIR ./DeleteFB
     RUN pip3 install -r requirements.txt
-    CMD python3 -m ./deletefb/deletefb.py    
-
-    USER ${user}
+#    RUN pip3 install selenium oathlib attrs pybloom_live
+    RUN pip3 install attrs pybloom_live
+    RUN pip3 install --user selenium
+    CMD python3 -m deletefb.deletefb 
