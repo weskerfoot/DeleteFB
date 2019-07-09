@@ -11,4 +11,4 @@ docker run -ti --rm \
     --device /dev/snd \
     --device /dev/dri \
     -v /dev/shm:/dev/shm  \
-    deletefb
+    deletefb  -e mail="your@email.com" -e pass="Y0Ur*P4ss" -e url="http://facebook.com/your-username" deletefb:latest 
