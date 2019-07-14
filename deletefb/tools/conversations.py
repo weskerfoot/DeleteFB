@@ -1,60 +1,53 @@
 from .archive import archiver
 from ..types import Conversation
-from .common import SELENIUM_EXCEPTIONS, logger, scroll_to
+from .common import SELENIUM_EXCEPTIONS, logger, scroll_to, click_button
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
+from time import sleep
 
 LOG = logger(__name__)
 
-def get_conversation_list(driver, offset=0):
+def get_conversations(driver):
     """
     Get a list of conversations
     """
 
     actions = ActionChains(driver)
 
-    convos = driver.find_elements_by_xpath("//ul[@aria-label=\"Conversation list\"]/li/div/a[@role=\"link\"]")
+    wait = WebDriverWait(driver, 20)
 
-    for convo in convos[offset:]:
-        actions.move_to_element(convo).perform()
-        yield convo
-    actions.move_to_element(current_convo).perform()
-
-def get_all_conversations(driver):
-    conversation_urls = set()
-
-    current_convo = None
+    try:
+        wait.until(
+            EC.presence_of_element_located((By.XPATH, "//div[@id=\"threadlist_rows\"]"))
+        )
+    except SELENIUM_EXCEPTIONS:
+        LOG.exception("No conversations")
+        return
 
     while True:
-        l = len(conversation_urls)
+        for convo in driver.find_elements_by_xpath("//a"):
+            url = convo.get_attribute("href")
+            if url and "messages/read" in url:
+                yield url
 
-        for convo in get_conversation_list(driver, offset=l):
-            url = convo.get_attribute("data-href")
-            conversation_urls.add(url)
-            current_convo = convo
-
-        if current_convo:
-            scroll_to(driver, current_convo)
-
-        print(l)
-        print(len(conversation_urls))
-        if len(conversation_urls) == l:
-            # no more conversations left
+        try:
+            next_url = driver.find_element_by_id("see_older_threads").find_element_by_xpath("a").get_attribute("href")
+        except SELENIUM_EXCEPTIONS:
             break
-
-    return list(conversation_urls)
-
+        if not next_url:
+            break
+        driver.get(next_url)
 
 def delete_conversations(driver):
     """
     Remove all conversations within a specified range
     """
 
-    driver.get("https://www.facebook.com/messages/t/")
+    driver.get("https://mobile.facebook.com/messages/?pageNum=1&selectable&see_older_newer=1")
 
-    wait = WebDriverWait(driver, 20)
+    convos = list(get_conversations(driver))
 
-    for convo_url in get_all_conversations(driver):
-        print(convo_url)
+    for convo in convos:
+        driver.get(convo)
