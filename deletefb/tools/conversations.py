@@ -1,11 +1,10 @@
 from .archive import archiver
 from ..types import Conversation
-from .common import SELENIUM_EXCEPTIONS, logger, scroll_to, click_button
+from .common import SELENIUM_EXCEPTIONS, logger, parse_ts, ParserError
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
-from time import sleep
 
 LOG = logger(__name__)
 
@@ -30,10 +29,16 @@ def get_conversations(driver):
         for convo in driver.find_elements_by_xpath("//a"):
             url = convo.get_attribute("href")
             if url and "messages/read" in url:
-                yield url
-
+                try:
+                    print(parse_ts(convo.find_element_by_xpath("../../..//abbr").text))
+                except ParserError:
+                    print("Failed to parse timestamp")
+                    continue
         try:
-            next_url = driver.find_element_by_id("see_older_threads").find_element_by_xpath("a").get_attribute("href")
+            next_url = (driver.find_element_by_id("see_older_threads").
+                        find_element_by_xpath("a").
+                        get_attribute("href"))
+
         except SELENIUM_EXCEPTIONS:
             break
         if not next_url:
