@@ -1,35 +1,39 @@
 import attr
 import uuid
-import datetime
+import pendulum
 
-def timestamp_now():
-    """
-    Returns: a timestamp for this instant, in ISO 8601 format
-    """
-    return datetime.datetime.isoformat(datetime.datetime.now())
+def convert_timestamp(text):
+    try:
+        return pendulum.from_format(text, "DD/M/YYYY")
+    except ValueError:
+        try:
+            return (pendulum.from_format(text, "DD MMM")
+                    .set(year=pendulum.now().year))
+        except ValueError:
+            return None
 
 # Data type definitions of posts and comments
 @attr.s
 class Post:
     content = attr.ib()
     comments = attr.ib(default=[])
-    date = attr.ib(factory=timestamp_now)
+    date = attr.ib(factory=pendulum.now)
     name = attr.ib(factory=lambda: uuid.uuid4().hex)
 
 @attr.s
 class Comment:
     commenter = attr.ib()
     content = attr.ib()
-    date = attr.ib(factory=timestamp_now)
+    date = attr.ib(factory=pendulum.now)
     name = attr.ib(factory=lambda: uuid.uuid4().hex)
 
 @attr.s
 class Conversation:
     url = attr.ib()
     name = attr.ib()
-    timestamp = attr.ib(default=None)
+    timestamp = attr.ib(converter=convert_timestamp)
 
 @attr.s
 class Page:
     name = attr.ib()
-    date = attr.ib(factory=timestamp_now)
+    date = attr.ib(factory=pendulum.now)

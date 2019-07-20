@@ -5,13 +5,12 @@ from selenium.common.exceptions import (
     TimeoutException,
     JavascriptException
 )
-from arrow.parser import ParserError
 
 import json
 import logging
 import logging.config
 import os
-import arrow
+import pendulum
 
 SELENIUM_EXCEPTIONS = (
     NoSuchElementException,
@@ -33,9 +32,6 @@ def scroll_to(driver, el):
         driver.execute_script("arguments[0].scrollIntoView();", el)
     except SELENIUM_EXCEPTIONS:
         return
-
-def parse_ts(text):
-    return arrow.get(text, "DD/M/YYYY")
 
 def logger(name):
     """

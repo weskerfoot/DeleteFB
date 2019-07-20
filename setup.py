@@ -24,7 +24,8 @@ setuptools.setup(
         "selenium-requests",
         "requests",
         "pybloom-live",
-        "attrs"
+        "attrs",
+        "pendulum"
     ],
     classifiers= [
         "Programming Language :: Python :: 3",

@@ -1,6 +1,6 @@
 from .archive import archiver
 from ..types import Conversation
-from .common import SELENIUM_EXCEPTIONS, logger, parse_ts, ParserError
+from .common import SELENIUM_EXCEPTIONS, logger
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -25,26 +25,32 @@ def get_conversations(driver):
         LOG.exception("No conversations")
         return
 
+    # This function *cannot* be a generator
+    # Otherwise elements will become stale
+    conversations = []
+
     while True:
         for convo in driver.find_elements_by_xpath("//a"):
             url = convo.get_attribute("href")
+
             timestamp = None
 
             if url and "messages/read" in url:
-                try:
-                    timestamp = parse_ts(convo.find_element_by_xpath("../../..//abbr").text)
-                except ParserError:
-                    print("Failed to parse timestamp")
-                    continue
 
+                timestamp = convo.find_element_by_xpath("../../..//abbr").text
                 conversation_name = convo.find_element_by_xpath("../../../div/div/header/h3").text.strip()
 
                 assert(conversation_name)
                 assert(url)
 
-                yield Conversation(url=url,
-                                   name=conversation_name,
-                                   timestamp=timestamp)
+                conversations.append(
+                    Conversation(
+                        url=url,
+                        timestamp=timestamp,
+                        name=conversation_name
+                    )
+                )
+
         try:
             next_url = (driver.find_element_by_id("see_older_threads").
                         find_element_by_xpath("a").
@@ -56,16 +62,16 @@ def get_conversations(driver):
             break
         driver.get(next_url)
 
-def delete_conversations(driver):
+    return conversations
+
+def delete_conversations(driver, older_than=None):
     """
     Remove all conversations within a specified range
     """
 
     driver.get("https://mobile.facebook.com/messages/?pageNum=1&selectable&see_older_newer=1")
 
-    convos = list(get_conversations(driver))
+    convos = get_conversations(driver)
 
     for convo in convos:
-        print(convo.url)
-        print(convo.name)
-        print(convo.timestamp)
+        print(convo)
