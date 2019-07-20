@@ -26,9 +26,8 @@ class Comment:
 @attr.s
 class Conversation:
     url = attr.ib()
-    recipient = attr.ib()
     name = attr.ib()
-    last_message_time = attr.ib(factory=timestamp_now)
+    timestamp = attr.ib(default=None)
 
 @attr.s
 class Page:

@@ -28,12 +28,23 @@ def get_conversations(driver):
     while True:
         for convo in driver.find_elements_by_xpath("//a"):
             url = convo.get_attribute("href")
+            timestamp = None
+
             if url and "messages/read" in url:
                 try:
-                    print(parse_ts(convo.find_element_by_xpath("../../..//abbr").text))
+                    timestamp = parse_ts(convo.find_element_by_xpath("../../..//abbr").text)
                 except ParserError:
                     print("Failed to parse timestamp")
                     continue
+
+                conversation_name = convo.find_element_by_xpath("../../../div/div/header/h3").text.strip()
+
+                assert(conversation_name)
+                assert(url)
+
+                yield Conversation(url=url,
+                                   name=conversation_name,
+                                   timestamp=timestamp)
         try:
             next_url = (driver.find_element_by_id("see_older_threads").
                         find_element_by_xpath("a").
@@ -55,4 +66,6 @@ def delete_conversations(driver):
     convos = list(get_conversations(driver))
 
     for convo in convos:
-        driver.get(convo)
+        print(convo.url)
+        print(convo.name)
+        print(convo.timestamp)
