@@ -3,6 +3,10 @@ import uuid
 import pendulum
 
 def convert_timestamp(text):
+    """
+    Tries to parse a timestamp into a DateTime instance
+    Returns `None` if it cannot be parsed
+    """
     try:
         return pendulum.from_format(text, "DD/M/YYYY")
     except ValueError:

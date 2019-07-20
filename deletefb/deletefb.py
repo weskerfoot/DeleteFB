@@ -93,8 +93,8 @@ def run_delete():
 
     settings["ARCHIVE"] = not args.archive_off
 
-    if args.year and args.mode != "wall":
-        parser.error("The --year option is only supported in wall mode")
+    if args.year and args.mode not in ("wall", "conversations"):
+        parser.error("The --year option is not supported in this mode")
 
     args_user_password = args.password or getpass.getpass('Enter your password: ')
 
@@ -119,7 +119,7 @@ def run_delete():
         delete_comments(driver, args.profile_url)
 
     elif args.mode == "conversations":
-        delete_conversations(driver)
+        delete_conversations(driver, year=args.year)
 
     else:
         print("Please enter a valid mode")

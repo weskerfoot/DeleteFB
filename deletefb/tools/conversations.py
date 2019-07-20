@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
+from pendulum import now
 
 LOG = logger(__name__)
 
@@ -64,7 +65,7 @@ def get_conversations(driver):
 
     return conversations
 
-def delete_conversations(driver, older_than=None):
+def delete_conversations(driver, year=None):
     """
     Remove all conversations within a specified range
     """
@@ -74,4 +75,14 @@ def delete_conversations(driver, older_than=None):
     convos = get_conversations(driver)
 
     for convo in convos:
-        print(convo)
+        # If the year is set and there is a timestamp
+        # Then we want to only look at convos from this year
+
+        if year and convo.timestamp:
+            if convo.timestamp.year == int(year):
+                print(convo)
+
+        # Otherwise we're looking at all convos
+        elif not year:
+            print(convo)
+
