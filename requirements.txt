@@ -5,6 +5,7 @@ certifi==2018.11.29
 chardet==3.0.4
 docutils==0.14
 idna==2.8
+lxml==4.4.0
 pendulum==2.0.5
 pkginfo==1.5.0.1
 pybloom-live==3.0.0
