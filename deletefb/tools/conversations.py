@@ -1,6 +1,6 @@
 from .archive import archiver
 from ..types import Conversation
-from .common import SELENIUM_EXCEPTIONS, logger
+from .common import SELENIUM_EXCEPTIONS, logger, click_button
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -65,6 +65,35 @@ def get_conversations(driver):
 
     return conversations
 
+
+def archive_conversation(driver, convo):
+    print(convo)
+    driver.get(convo.url)
+
+    wait = WebDriverWait(driver, 20)
+    try:
+        wait.until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'See Older Messages')]"))
+                )
+    except SELENIUM_EXCEPTIONS:
+        LOG.exception("Could not load more messages")
+        return
+
+    while True:
+        try:
+            see_older = driver.find_element_by_xpath("//*[contains(text(), 'See Older Messages')]")
+        except SELENIUM_EXCEPTIONS:
+            break
+
+        if not see_older:
+            break
+
+        try:
+            click_button(driver, see_older)
+        except SELENIUM_EXCEPTIONS:
+            continue
+    driver.find_element_by_xpath("html").save_screenshot("%s.png" % convo.name)
+
 def delete_conversations(driver, year=None):
     """
     Remove all conversations within a specified range
@@ -80,9 +109,9 @@ def delete_conversations(driver, year=None):
 
         if year and convo.timestamp:
             if convo.timestamp.year == int(year):
-                print(convo)
+                archive_conversation(driver, convo)
 
         # Otherwise we're looking at all convos
         elif not year:
-            print(convo)
+            archive_conversation(driver, convo)
 
