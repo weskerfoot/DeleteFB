@@ -1,11 +1,14 @@
 from .archive import archiver
-from ..types import Conversation
+from ..types import Conversation, Message
 from .common import SELENIUM_EXCEPTIONS, logger, click_button
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from pendulum import now
+from json import loads
+
+import lxml.html as lxh
 
 LOG = logger(__name__)
 
@@ -65,6 +68,28 @@ def get_conversations(driver):
 
     return conversations
 
+def get_convo_images(driver):
+    """
+    Gets all links to images in a messenger conversation
+    Removes duplicates
+    """
+    for img in set(lxh.fromstring(driver.page_source).xpath("//img")):
+        yield img.get("src")
+
+def get_convo_messages(driver):
+    """
+    Gets all messages in a conversation
+    """
+
+    for msg in lxh.fromstring(driver.page_source).xpath("//div[@class='msg']/div"):
+        data_store = loads(msg.get("data-store"))
+        msg_text = msg.text_content()
+
+        yield Message(
+                name=data_store.get("author"),
+                content=msg_text,
+                timestamp=data_store.get("timestamp")
+              )
 
 def archive_conversation(driver, convo):
     print(convo)
@@ -79,6 +104,7 @@ def archive_conversation(driver, convo):
         LOG.exception("Could not load more messages")
         return
 
+    # Expand conversation until we've reached the beginning
     while True:
         try:
             see_older = driver.find_element_by_xpath("//*[contains(text(), 'See Older Messages')]")
@@ -92,7 +118,11 @@ def archive_conversation(driver, convo):
             click_button(driver, see_older)
         except SELENIUM_EXCEPTIONS:
             continue
-    driver.find_element_by_xpath("html").save_screenshot("%s.png" % convo.name)
+
+    #for img in get_convo_images(driver):
+        #print(img)
+
+    convo.messages = list(get_convo_messages(driver))
 
 def delete_conversations(driver, year=None):
     """
@@ -110,8 +140,8 @@ def delete_conversations(driver, year=None):
         if year and convo.timestamp:
             if convo.timestamp.year == int(year):
                 archive_conversation(driver, convo)
+                print(convo.messages)
 
         # Otherwise we're looking at all convos
         elif not year:
             archive_conversation(driver, convo)
-
