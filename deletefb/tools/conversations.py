@@ -37,11 +37,11 @@ def get_conversations(driver):
         for convo in driver.find_elements_by_xpath("//a"):
             url = convo.get_attribute("href")
 
-            timestamp = None
+            date = None
 
             if url and "messages/read" in url:
 
-                timestamp = convo.find_element_by_xpath("../../..//abbr").text
+                date = convo.find_element_by_xpath("../../..//abbr").text
                 conversation_name = convo.find_element_by_xpath("../../../div/div/header/h3").text.strip()
 
                 assert(conversation_name)
@@ -50,7 +50,7 @@ def get_conversations(driver):
                 conversations.append(
                     Conversation(
                         url=url,
-                        timestamp=timestamp,
+                        date=date,
                         name=conversation_name
                     )
                 )
@@ -88,7 +88,7 @@ def get_convo_messages(driver):
         yield Message(
                 name=data_store.get("author"),
                 content=msg_text,
-                timestamp=data_store.get("timestamp")
+                date=data_store.get("timestamp")
               )
 
 def archive_conversation(driver, convo):
@@ -134,11 +134,11 @@ def delete_conversations(driver, year=None):
     convos = get_conversations(driver)
 
     for convo in convos:
-        # If the year is set and there is a timestamp
+        # If the year is set and there is a date
         # Then we want to only look at convos from this year
 
-        if year and convo.timestamp:
-            if convo.timestamp.year == int(year):
+        if year and convo.date:
+            if convo.date.year == int(year):
                 archive_conversation(driver, convo)
                 print(convo.messages)
 
