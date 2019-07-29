@@ -1,12 +1,20 @@
 from .config import settings
 from contextlib import contextmanager
 from pathlib import Path
+from datetime import datetime
 
 import attr
+import cattr
 import json
+
+TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 # Used to avoid duplicates in the log
 from pybloom_live import BloomFilter
+
+cattr.register_unstructure_hook(
+    datetime, lambda dt: datetime.strftime(dt, format=TIME_FORMAT)
+)
 
 def make_filter():
     return BloomFilter(
@@ -30,7 +38,7 @@ class Archive:
         print("Archiving {0}".format(content))
 
         if content.name not in self._bloom_filter:
-            self.archive_file.write(json.dumps(attr.asdict(content)) + "\n")
+            self.archive_file.write(json.dumps(cattr.unstructure(content)) + "\n")
             self._bloom_filter.add(content.name)
         return
 

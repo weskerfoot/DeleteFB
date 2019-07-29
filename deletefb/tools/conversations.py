@@ -68,17 +68,9 @@ def get_conversations(driver):
 
     return conversations
 
-def get_convo_images(driver):
+def parse_conversation(driver):
     """
-    Gets all links to images in a messenger conversation
-    Removes duplicates
-    """
-    for img in set(lxh.fromstring(driver.page_source).xpath("//img")):
-        yield img.get("src")
-
-def get_convo_messages(driver):
-    """
-    Gets all messages in a conversation
+    Extracts all messages in a conversation
     """
 
     for msg in lxh.fromstring(driver.page_source).xpath("//div[@class='msg']/div"):
@@ -91,8 +83,10 @@ def get_convo_messages(driver):
                 date=data_store.get("timestamp")
               )
 
-def archive_conversation(driver, convo):
-    print(convo)
+def get_messages(driver, convo):
+    """
+    Get all of the messages for a given conversation
+    """
     driver.get(convo.url)
 
     wait = WebDriverWait(driver, 20)
@@ -119,12 +113,16 @@ def archive_conversation(driver, convo):
         except SELENIUM_EXCEPTIONS:
             continue
 
-    #for img in get_convo_images(driver):
-        #print(img)
+    return list(parse_conversation(driver))
 
-    convo.messages = list(get_convo_messages(driver))
+def delete_conversation(driver, convo):
+    """
+    Deletes a conversation
+    """
 
-def delete_conversations(driver, year=None):
+    return
+
+def traverse_conversations(driver, year=None):
     """
     Remove all conversations within a specified range
     """
@@ -133,15 +131,18 @@ def delete_conversations(driver, year=None):
 
     convos = get_conversations(driver)
 
-    for convo in convos:
-        # If the year is set and there is a date
-        # Then we want to only look at convos from this year
+    with archiver("conversations") as archive_convo:
+        for convo in convos:
+            # If the year is set and there is a date
+            # Then we want to only look at convos from this year
 
-        if year and convo.date:
-            if convo.date.year == int(year):
-                archive_conversation(driver, convo)
-                print(convo.messages)
+            if year and convo.date:
+                if convo.date.year == int(year):
+                    convo.messages = get_messages(driver, convo)
+                    archive_convo.archive(convo)
 
-        # Otherwise we're looking at all convos
-        elif not year:
-            archive_conversation(driver, convo)
+            # Otherwise we're looking at all convos
+            elif not year:
+                convo.messages = get_messages(driver, convo)
+                archive_convo.archive(convo)
+

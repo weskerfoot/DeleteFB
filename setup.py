@@ -25,6 +25,7 @@ setuptools.setup(
         "requests",
         "pybloom-live",
         "attrs",
+        "cattrs",
         "lxml",
         "pendulum"
     ],

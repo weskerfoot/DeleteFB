@@ -4,7 +4,7 @@ from .tools.config import settings
 from .tools.likes import unlike_pages
 from .tools.login import login
 from .tools.wall import delete_posts
-from .tools.conversations import delete_conversations
+from .tools.conversations import traverse_conversations
 from .tools.comments import delete_comments
 
 import argparse
@@ -119,7 +119,7 @@ def run_delete():
         delete_comments(driver, args.profile_url)
 
     elif args.mode == "conversations":
-        delete_conversations(driver, year=args.year)
+        traverse_conversations(driver, year=args.year)
 
     else:
         print("Please enter a valid mode")

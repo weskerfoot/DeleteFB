@@ -2,6 +2,8 @@ import attr
 import uuid
 import pendulum
 
+from datetime import datetime
+
 def convert_date(text):
     """
     Tries to parse a date into a DateTime instance
@@ -35,7 +37,7 @@ class Comment:
 class Conversation:
     url = attr.ib()
     name = attr.ib()
-    date = attr.ib(converter=convert_date)
+    date : datetime = attr.ib(converter=convert_date)
     messages = attr.ib(default=[])
 
 @attr.s
@@ -44,7 +46,7 @@ class Message:
     content = attr.ib()
 
     # Remove the last 3 digits from FB's dates. They are not standard.
-    date = attr.ib(converter=lambda t: pendulum.from_timestamp(int(str(t)[0:-3])))
+    date : datetime = attr.ib(converter=lambda t: pendulum.from_timestamp(int(str(t)[0:-3])))
 
 @attr.s
 class Page:
