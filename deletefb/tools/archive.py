@@ -6,6 +6,7 @@ from datetime import datetime
 import attr
 import cattr
 import json
+import typing
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -38,7 +39,10 @@ class Archive:
         print("Archiving {0}".format(content))
 
         if content.name not in self._bloom_filter:
-            self.archive_file.write(json.dumps(cattr.unstructure(content)) + "\n")
+            self.archive_file.write(json.dumps(cattr.unstructure(content),
+                                               indent=4,
+                                               sort_keys=True) + "\n")
+
             self._bloom_filter.add(content.name)
         return
 

@@ -39,6 +39,7 @@ class Conversation:
     name = attr.ib()
     date : datetime = attr.ib(converter=convert_date)
     messages = attr.ib(default=[])
+    image_links = attr.ib(default=[])
 
 @attr.s
 class Message:

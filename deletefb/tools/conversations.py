@@ -83,9 +83,18 @@ def parse_conversation(driver):
                 date=data_store.get("timestamp")
               )
 
-def get_messages(driver, convo):
+def get_images(driver):
     """
-    Get all of the messages for a given conversation
+    Gets all links to images in a messenger conversation
+    Removes duplicates
+    """
+    for img in set(lxh.fromstring(driver.page_source).xpath("//img")):
+        yield img.get("src")
+
+def get_convo(driver, convo):
+    """
+    Get all of the messages/images for a given conversation
+    Returns a list of messages and a list of image links
     """
     driver.get(convo.url)
 
@@ -113,7 +122,9 @@ def get_messages(driver, convo):
         except SELENIUM_EXCEPTIONS:
             continue
 
-    return list(parse_conversation(driver))
+    messages = list(parse_conversation(driver))
+    image_links = list(set(get_images(driver)))
+    return (messages, image_links)
 
 def delete_conversation(driver, convo):
     """
@@ -121,6 +132,24 @@ def delete_conversation(driver, convo):
     """
 
     return
+
+def extract_convo(driver, convo):
+    """
+    Extract messages and image links from a conversation
+    Return a new Conversation instance
+    """
+    result = get_convo(driver, convo)
+
+    if not result:
+        return None
+
+    messages, image_links = result
+
+    convo.messages = messages
+    convo.image_links = image_links
+
+    return convo
+
 
 def traverse_conversations(driver, year=None):
     """
@@ -138,11 +167,11 @@ def traverse_conversations(driver, year=None):
 
             if year and convo.date:
                 if convo.date.year == int(year):
-                    convo.messages = get_messages(driver, convo)
+                    extract_convo(driver, convo)
                     archive_convo.archive(convo)
 
             # Otherwise we're looking at all convos
             elif not year:
-                convo.messages = get_messages(driver, convo)
+                extract_convo(driver, convo)
                 archive_convo.archive(convo)
 
