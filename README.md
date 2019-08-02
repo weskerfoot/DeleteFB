@@ -19,7 +19,7 @@ Personally, I did this so I would feel less attached to my Facebook profile
 
 ## Installation
 You have several options to run it.
-1) Install from PyPI with `pip3 install --user delete-facebook-posts`
+1) Install from PyPI with `pip3 install --user delete-facebook-posts` (recommended)
 2) Clone this repo and run `pip3 install --user .` or do `pip3 install --user
 git+https://github.com/weskerfoot/DeleteFB.git`
 3) Set up a Python virtualenv, activate it, and run `pip3 install -r requirements.txt`, then you can just run `python -m deletefb.deletefb` in the DeleteFB directory.
@@ -62,14 +62,7 @@ git+https://github.com/weskerfoot/DeleteFB.git`
 * You may also pass in a code by using the `-F` argument, e.g. `-F 111111`.
 
 ## Delete By Year
-* The tool supports passing the `--year` flag in order to delete wall posts by
-  year. E.g. `-Y 2010` would delete posts from the year 2010. It is incompatible with any mode other than `wall`.
-
-## Unlike Pages
-* You may use `-M unlike_pages` to unlike all of your pages. The names of the
-  pages will be archived (unless archival is turned off), and this option
-  conflicts with the year option. This will only unlike your *pages* that you
-  have liked. It will *not* unlike anything else (like books or movies).
+* The tool supports passing the `--year` flag in order to delete/archive by year. E.g. `-Y 2010` would only affect posts from 2010.
 
 ## Archival
 * The tool will archive everything being deleted by default in `.log` files.
