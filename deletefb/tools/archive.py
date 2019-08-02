@@ -2,6 +2,7 @@ from .config import settings
 from contextlib import contextmanager
 from pathlib import Path
 from datetime import datetime
+from time import time
 
 import attr
 import cattr
@@ -36,7 +37,7 @@ class Archive:
         """
         Archive an object
         """
-        print("Archiving {0}".format(content))
+        print("Archiving content")
 
         if content.name not in self._bloom_filter:
             self.archive_file.write(json.dumps(cattr.unstructure(content),
@@ -50,7 +51,7 @@ class Archive:
 def archiver(archive_type):
 
     archive_file = open(
-        (Path(".") / Path(archive_type).name).with_suffix(".log"),
+        (Path(".") / Path(archive_type).name).with_suffix(".log.{0}".format(time())),
         mode="ta",
         buffering=1
     )
