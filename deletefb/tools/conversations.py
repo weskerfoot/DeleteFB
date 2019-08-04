@@ -6,7 +6,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 from pendulum import now
 from json import loads
-from time import sleep
 
 import lxml.html as lxh
 
@@ -119,18 +118,13 @@ def delete_conversation(driver, convo):
     menu_select = Select(driver.find_element_by_xpath("//select/option[contains(text(), 'Delete')]/.."))
 
     for i, option in enumerate(menu_select.options):
-        print(option.text)
         if option.text.strip() == "Delete":
             menu_select.select_by_index(i)
-
+            break
 
     wait_xpath(driver, "//h2[contains(text(), 'Delete conversation')]")
-
     delete_button = driver.find_element_by_xpath("//a[contains(text(), 'Delete')][@role='button']")
-
     actions.move_to_element(delete_button).click().perform()
-
-    sleep(10000)
 
     return
 
