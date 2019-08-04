@@ -53,7 +53,7 @@ class Archive:
 def archiver(archive_type):
 
     archive_file = open(
-        (Path(".") / Path(archive_type).name).with_suffix(".log.{0}".format(time())),
+        str((Path(".") / Path(archive_type).name).with_suffix(".log.{0}".format(time()))),
         mode="ta",
         buffering=1
     )
