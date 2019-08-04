@@ -1,12 +1,10 @@
 from .archive import archiver
 from ..types import Conversation, Message
-from .common import SELENIUM_EXCEPTIONS, logger, click_button
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from .common import SELENIUM_EXCEPTIONS, logger, click_button, wait_xpath
 from selenium.webdriver.common.action_chains import ActionChains
 from pendulum import now
 from json import loads
+from time import sleep
 
 import lxml.html as lxh
 
@@ -17,17 +15,7 @@ def get_conversations(driver):
     Get a list of conversations
     """
 
-    actions = ActionChains(driver)
-
-    wait = WebDriverWait(driver, 20)
-
-    try:
-        wait.until(
-            EC.presence_of_element_located((By.XPATH, "//div[@id=\"threadlist_rows\"]"))
-        )
-    except SELENIUM_EXCEPTIONS:
-        LOG.exception("No conversations")
-        return
+    wait_xpath(driver, "//div[@id=\"threadlist_rows\"]")
 
     # This function *cannot* be a generator
     # Otherwise elements will become stale
@@ -98,14 +86,7 @@ def get_convo(driver, convo):
     """
     driver.get(convo.url)
 
-    wait = WebDriverWait(driver, 20)
-    try:
-        wait.until(
-                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'See Older Messages')]"))
-                )
-    except SELENIUM_EXCEPTIONS:
-        LOG.exception("Could not load more messages")
-        return
+    wait_xpath(driver, "//*[contains(text(), 'See Older Messages')]")
 
     # Expand conversation until we've reached the beginning
     while True:
@@ -131,6 +112,12 @@ def delete_conversation(driver, convo):
     Deletes a conversation
     """
 
+    actions = ActionChains(driver)
+
+    delete_button = driver.find_element_by_xpath("//select/option[contains(text(), 'Delete')]")
+
+    actions.move_to_element(delete_button).click().perform()
+
     return
 
 def extract_convo(driver, convo):
@@ -150,8 +137,7 @@ def extract_convo(driver, convo):
 
     return convo
 
-
-def traverse_conversations(driver, year=None):
+def traverse_conversations(driver, year=None, delete=False):
     """
     Remove all conversations within a specified range
     """
@@ -169,9 +155,13 @@ def traverse_conversations(driver, year=None):
                 if convo.date.year == int(year):
                     extract_convo(driver, convo)
                     archive_convo.archive(convo)
+                    if delete:
+                        delete_conversation(driver, convo)
 
             # Otherwise we're looking at all convos
             elif not year:
                 extract_convo(driver, convo)
                 archive_convo.archive(convo)
+                if delete:
+                    delete_conversation(driver, convo)
 

@@ -1,4 +1,7 @@
 from os.path import isfile
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
@@ -51,6 +54,17 @@ def logger(name):
         config = json.load(config_file)
         logging.config.dictConfig(config["logging"])
     return logging.getLogger(name)
+
+
+def wait_xpath(driver, expr):
+    """
+    Takes an XPath expression, and waits at most 20 seconds until it exists
+    """
+    wait = WebDriverWait(driver, 20)
+    try:
+        wait.until(EC.presence_of_element_located((By.XPATH, expr)))
+    except SELENIUM_EXCEPTIONS:
+        return
 
 NO_CHROME_DRIVER = """
 You need to install the chromedriver for Selenium\n

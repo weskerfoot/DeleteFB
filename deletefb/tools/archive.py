@@ -37,7 +37,9 @@ class Archive:
         """
         Archive an object
         """
-        print("Archiving content")
+
+        if hasattr(content, 'name'):
+            print("Archiving {0}".format(content.name))
 
         if content.name not in self._bloom_filter:
             self.archive_file.write(json.dumps(cattr.unstructure(content),
