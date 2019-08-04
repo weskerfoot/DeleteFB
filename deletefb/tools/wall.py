@@ -42,7 +42,6 @@ def delete_posts(driver,
                     post_content_element = driver.find_element_by_class_name(post_content_sel)
                     post_content_ts = driver.find_element_by_class_name(post_timestamp_sel)
 
-
                     # Archive the post
                     archive_wall_post.archive(
                         Post(
