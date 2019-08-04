@@ -1,7 +1,9 @@
 from .archive import archiver
 from ..types import Conversation, Message
 from .common import SELENIUM_EXCEPTIONS, logger, click_button, wait_xpath
+from .config import settings
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import Select
 from pendulum import now
 from json import loads
 from time import sleep
@@ -114,9 +116,21 @@ def delete_conversation(driver, convo):
 
     actions = ActionChains(driver)
 
-    delete_button = driver.find_element_by_xpath("//select/option[contains(text(), 'Delete')]")
+    menu_select = Select(driver.find_element_by_xpath("//select/option[contains(text(), 'Delete')]/.."))
+
+    for i, option in enumerate(menu_select.options):
+        print(option.text)
+        if option.text.strip() == "Delete":
+            menu_select.select_by_index(i)
+
+
+    wait_xpath(driver, "//h2[contains(text(), 'Delete conversation')]")
+
+    delete_button = driver.find_element_by_xpath("//a[contains(text(), 'Delete')][@role='button']")
 
     actions.move_to_element(delete_button).click().perform()
+
+    sleep(10000)
 
     return
 
@@ -137,7 +151,7 @@ def extract_convo(driver, convo):
 
     return convo
 
-def traverse_conversations(driver, year=None, delete=False):
+def traverse_conversations(driver, year=None):
     """
     Remove all conversations within a specified range
     """
@@ -154,14 +168,18 @@ def traverse_conversations(driver, year=None, delete=False):
             if year and convo.date:
                 if convo.date.year == int(year):
                     extract_convo(driver, convo)
-                    archive_convo.archive(convo)
-                    if delete:
-                        delete_conversation(driver, convo)
+
+                    if settings["ARCHIVE"]:
+                        archive_convo.archive(convo)
+
+                    delete_conversation(driver, convo)
 
             # Otherwise we're looking at all convos
             elif not year:
                 extract_convo(driver, convo)
-                archive_convo.archive(convo)
-                if delete:
-                    delete_conversation(driver, convo)
+
+                if settings["ARCHIVE"]:
+                    archive_convo.archive(convo)
+
+                delete_conversation(driver, convo)
 
