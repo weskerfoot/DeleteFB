@@ -1,6 +1,6 @@
 from ..types import Post
 from .archive import archiver
-from .common import SELENIUM_EXCEPTIONS, click_button
+from .common import SELENIUM_EXCEPTIONS, click_button, wait_xpath
 from .config import settings
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -53,8 +53,9 @@ def delete_posts(driver,
                     actions = ActionChains(driver)
                     actions.move_to_element(timeline_element).click().perform()
 
-                    menu = driver.find_element_by_css_selector("#globalContainer > div.uiContextualLayerPositioner.uiLayer > div")
-                    actions.move_to_element(menu).perform()
+                    wait_xpath(driver, "//*[@id='feed_post_menu']/..")
+
+                    menu = driver.find_element_by_xpath("//*[@id='feed_post_menu']/..")
 
                     delete_button = None
 
@@ -69,7 +70,7 @@ def delete_posts(driver,
                         print("Could not find anything to delete")
                         break
 
-                    actions.move_to_element(delete_button).click().perform()
+                    click_button(driver, delete_button)
                     confirmation_button = driver.find_element_by_class_name("layerConfirm")
 
                     click_button(driver, confirmation_button)
