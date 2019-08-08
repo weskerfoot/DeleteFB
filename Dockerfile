@@ -1,7 +1,19 @@
-# to build and launch, edit ./run.sh
-# with your values, then execute it
+# docker run -ti --rm \
+#     -e DISPLAY=$DISPLAY \
+#     -v /tmp/.X11-unix:/tmp/.X11-unix \
+#     --cap-add=SYS_ADMIN \
+#     --cap-add=NET_ADMIN \
+#     --cpuset-cpus 0 \
+#     --memory 4GB \
+#     -v /tmp/.X11-unix:/tmp/.X11-unix \
+#     -e DISPLAY=unix:0 \
+#     --device /dev/snd \
+#     --device /dev/dri \
+#     -v /dev/shm:/dev/shm  \
+#     deletefb  -e mail="your@email.com" -e pass="Y0Ur*P4ss" -e url="http://facebook.com/your-username" deletefb:latest
 
 FROM debian:stable-slim
+    
     RUN apt-get update &&  \
      apt-get install -y \
      git \
@@ -15,8 +27,8 @@ FROM debian:stable-slim
      chromium \
      chromium-driver
 
-#creating user
-    ENV user username
+#creating new user
+    ENV user deletefb
     RUN export uid=1000 gid=1000 && \
     mkdir -p /home/${user} && \
     echo "${user}:x:${uid}:${gid}:${user},,,:/home/${user}:/bin/bash" >> /etc/passwd && \
@@ -26,17 +38,18 @@ FROM debian:stable-slim
     chown ${uid}:${gid} -R /home/${user} && \
     usermod -aG sudo ${user}
 
-# delete FB repo install
+
+# deletefb install
     USER ${user}
     WORKDIR /home/${user}
-
-    ARG mail  
+    
+    ARG email  
     ARG pass  
     ARG url  
+    #ARG --conversations
 
     RUN pip3 install --user delete-facebook-posts
-    RUN pip3 install --user git+https://github.com/weskerfoot/DeleteFB.git
-    RUN git clone https://github.com/weskerfoot/DeleteFB.git 
-    RUN pip3 install -r ./DeleteFB/requirements.txt
     RUN pip3 install --user selenium attrs pybloom_live
-    CMD python3 -m deletefb.deletefb -E ${mail} -P ${pass} -U ${url}  
+
+    ADD run.sh /tmp/run.sh
+    ENTRYPOINT [ "/tmp/run.sh" ]
