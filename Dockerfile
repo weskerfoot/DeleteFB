@@ -1,3 +1,6 @@
+# To run, just type "make", or 
+
+# docker build -t deletefb . 
 # docker run -ti --rm \
 #     -e DISPLAY=$DISPLAY \
 #     -v /tmp/.X11-unix:/tmp/.X11-unix \
