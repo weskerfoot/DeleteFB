@@ -10,7 +10,7 @@ build:
 	@docker build -t $(NAME) .   
 
 run:
-	@read -p "Enter your Facebook email: " email && read -p "Enter your Facebook password: " password   && read -p "Enter your Facebook username: " username  && docker run -ti --rm \
+	@read -p "Enter your Facebook email: " email && read -p "Enter your Facebook password: " password && read -p "Enter your Facebook username: " username  && docker run -ti --rm \
     -e DISPLAY=$$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     --cap-add=SYS_ADMIN \
