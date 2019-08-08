@@ -1,7 +1,6 @@
 # Makefile
 
 NAME:= deletefb
-url := https://facebook.com/$$username
 
 .PHONY: all build run
 
