@@ -1,0 +1,27 @@
+sudo: required
+services:
+  - docker
+env:
+  global:
+  #   - REGISTRY_USER=${REGISTRY_USER}
+  #   - REGISTRY_PASS=${REGISTRY_PASS}
+    - IMAGE_NAME=${REGISTRY_USER}/deletefb
+  
+# before_script:
+  
+script:
+  - docker build --pull --no-cache --tag "$IMAGE_NAME" .
+  #  - docker build --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
+
+after_script:
+  - docker images
+
+before_deploy:   
+  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+  - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
+  # - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:${version}"
+deploy:
+  provider: script
+  script: docker push "${IMAGE_NAME}:latest"
+  on:
+    branch: master
