@@ -13,7 +13,7 @@ script:
   # - docker build --pull --no-cache --tag "$IMAGE_NAME" .
   #  - docker build --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
   - echo "${REGISTRY_PASS}" | docker login -u "${REGISTRY_USER}" --password-stdin
-  - docker build -t ${IMAGE_NAME} .
+  - docker build -t ${REGISTRY_USER}/${IMAGE_NAME} .
   - docker images
   - docker push ${REGISTRY_USER}/${IMAGE_NAME}
 on: 
