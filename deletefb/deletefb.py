@@ -23,7 +23,7 @@ def run_delete():
         default="wall",
         dest="mode",
         type=str,
-        choices=["wall", "unlike_pages", "comments", "conversations"],
+        choices=["wall", "unlike_pages", "conversations"],
         help="The mode you want to run in. Default is `wall' which deletes wall posts"
     )
 
@@ -114,9 +114,6 @@ def run_delete():
 
     elif args.mode == "unlike_pages":
         unlike_pages(driver, args.profile_url)
-
-    elif args.mode == "comments":
-        delete_comments(driver, args.profile_url)
 
     elif args.mode == "conversations":
         traverse_conversations(driver, year=args.year)
