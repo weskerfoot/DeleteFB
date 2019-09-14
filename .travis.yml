@@ -1,0 +1,17 @@
+sudo: required
+services:
+  - docker
+env:
+  global:
+  #   setup these vars under settings at https://travis-ci.com
+  #   - REGISTRY_USER=${REGISTRY_USER}
+  #   - REGISTRY_PASS=${REGISTRY_PASS}
+  #   - IMAGE_NAME=${REGISTRY_USER}/deletefb
+    
+script:
+  - echo "${REGISTRY_PASS}" | docker login -u "${REGISTRY_USER}" --password-stdin
+  - docker build -t ${REGISTRY_USER}/${IMAGE_NAME} .
+  - docker images
+  - docker push ${REGISTRY_USER}/${IMAGE_NAME}
+on: 
+  branch: master
