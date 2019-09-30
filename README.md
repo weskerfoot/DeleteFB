@@ -23,6 +23,7 @@ You have several options to run it.
 2) Clone this repo and run `pip3 install --user .` or do `pip3 install --user
 git+https://github.com/weskerfoot/DeleteFB.git`
 3) Set up a Python virtualenv, activate it, and run `pip3 install -r requirements.txt`, then you can just run `python -m deletefb.deletefb` in the DeleteFB directory.
+4) Use the docker image (experimental) by running `make` after checking this repository out with git. There is also an image built and published automatically at `wjak56/deletefb:latest`
 
 ## How To Use It
 
