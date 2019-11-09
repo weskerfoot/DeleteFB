@@ -27,7 +27,9 @@ setuptools.setup(
         "attrs",
         "cattrs",
         "lxml",
-        "pendulum"
+        "pendulum",
+        "clint",
+        "progressbar"
     ],
     classifiers= [
         "Programming Language :: Python :: 3",
