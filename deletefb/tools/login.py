@@ -1,10 +1,10 @@
-from .common import NO_CHROME_DRIVER
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
-from seleniumrequests import Chrome
 
-import sys
 import time
+
+from .chrome_driver import get_webdriver, setup_selenium
+
 
 def login(user_email_address,
           user_password,
@@ -34,15 +34,8 @@ def login(user_email_address,
         chrome_options.add_argument('--disable-gpu')
         chrome_options.add_argument('log-level=2')
 
-    try:
-        driver = Chrome(options=chrome_options)
-    except Exception as e:
-        # The user does not have chromedriver installed
-        # Tell them to install it
-        sys.stderr.write(str(e))
-        sys.stderr.write(NO_CHROME_DRIVER)
-        sys.exit(1)
-
+    driver_path = get_webdriver()
+    driver = setup_selenium(driver_path, chrome_options)
     driver.implicitly_wait(10)
 
     driver.get("https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&lwv=110")
