@@ -1,0 +1,2 @@
+class UnknownOSException(Exception):
+    pass

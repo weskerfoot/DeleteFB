@@ -5,15 +5,13 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
-    TimeoutException,
-    JavascriptException
+    TimeoutException
 )
 
 import json
 import logging
 import logging.config
 import os
-import pendulum
 
 SELENIUM_EXCEPTIONS = (
     NoSuchElementException,
@@ -21,11 +19,13 @@ SELENIUM_EXCEPTIONS = (
     TimeoutException
 )
 
+
 def click_button(driver, el):
     """
     Click a button using Javascript
     """
     driver.execute_script("arguments[0].click();", el)
+
 
 def scroll_to(driver, el):
     """
@@ -35,6 +35,7 @@ def scroll_to(driver, el):
         driver.execute_script("arguments[0].scrollIntoView();", el)
     except SELENIUM_EXCEPTIONS:
         return
+
 
 def logger(name):
     """
@@ -66,7 +67,8 @@ def wait_xpath(driver, expr):
     except SELENIUM_EXCEPTIONS:
         return
 
+
 NO_CHROME_DRIVER = """
-You need to install the chromedriver for Selenium\n
+You need to manually install the chromedriver for Selenium\n
 Please see this link https://github.com/weskerfoot/DeleteFB#how-to-use-it\n
 """
