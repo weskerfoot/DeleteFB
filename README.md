@@ -30,7 +30,7 @@ git+https://github.com/weskerfoot/DeleteFB.git`
 * Make sure that you have a recent version of Python 3.x installed (preferably
   3.6 or greater)
 * Make sure that you have Google Chrome installed and that it is up to date
-* Also install the chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/home) for an explanation of what the chromedriver does.
+* The tool will attempt to automatically install chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/home) for an explanation of what the chromedriver does. You may have to manually install it if auto-install fails.
   * On Linux, it will be called something like `chromium-chromedriver` or just
     `chromium`.
   * On MacOS, it will be available via brew, with the following commands:
