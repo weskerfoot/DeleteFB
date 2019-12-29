@@ -22,7 +22,7 @@ def convert_date(text):
 @attr.s
 class Post:
     content = attr.ib()
-    comments = attr.ib(default=[])
+    comments = attr.ib(factory=[])
     date = attr.ib(factory=pendulum.now)
     name = attr.ib(factory=lambda: uuid.uuid4().hex)
 
@@ -38,8 +38,8 @@ class Conversation:
     url = attr.ib()
     name = attr.ib()
     date : datetime = attr.ib(converter=convert_date)
-    messages = attr.ib(default=[])
-    image_links = attr.ib(default=[])
+    messages = attr.ib(factory=[])
+    image_links = attr.ib(factory=[])
 
 @attr.s
 class Message:
