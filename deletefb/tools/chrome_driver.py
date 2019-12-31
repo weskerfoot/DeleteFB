@@ -51,7 +51,6 @@ def setup_selenium(driver_path, options):
     # Configures selenium to use a custom path
     return webdriver.Chrome(executable_path=driver_path, options=options)
 
-
 def get_webdriver():
     """
      Ensure a webdriver is available

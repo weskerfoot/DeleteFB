@@ -89,6 +89,16 @@ def run_delete():
         help="The year(s) you want posts deleted."
     )
 
+    parser.add_argument(
+        "-B",
+        "--chromebin",
+        required=False,
+        default=False,
+        dest="chromebin",
+        type=str,
+        help="Optional path to the Google Chrome (or Chromium) binary"
+    )
+
     args = parser.parse_args()
 
     settings["ARCHIVE"] = not args.archive_off
@@ -102,7 +112,8 @@ def run_delete():
         user_email_address=args.email,
         user_password=args_user_password,
         is_headless=args.is_headless,
-        two_factor_token=args.two_factor_token
+        two_factor_token=args.two_factor_token,
+        chrome_binary_path=args.chromebin
     )
 
     if args.mode == "wall":

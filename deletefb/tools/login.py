@@ -5,11 +5,11 @@ import time
 
 from .chrome_driver import get_webdriver, setup_selenium
 
-
 def login(user_email_address,
           user_password,
           is_headless,
-          two_factor_token):
+          two_factor_token,
+          chrome_binary_path=None):
     """
     Attempts to log into Facebook
     Returns a driver object
@@ -27,6 +27,10 @@ def login(user_email_address,
     chrome_options = Options()
     prefs = {"profile.default_content_setting_values.notifications": 2, 'disk-cache-size': 4096}
     chrome_options.add_experimental_option("prefs", prefs)
+
+    if chrome_binary_path:
+        chrome_options.binary_location = chrome_binary_path
+
     chrome_options.add_argument("start-maximized")
 
     if is_headless:
