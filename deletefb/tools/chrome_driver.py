@@ -1,10 +1,8 @@
 from ..exceptions import UnknownOSException
 from .common import NO_CHROME_DRIVER
 from clint.textui import puts, colored
-from collections import namedtuple
 from selenium import webdriver
 from urllib.request import urlretrieve
-from enum import Enum
 
 import os, sys, stat, platform
 import progressbar

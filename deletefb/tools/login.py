@@ -1,9 +1,8 @@
+from .chrome_driver import get_webdriver, setup_selenium
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 
 import time
-
-from .chrome_driver import get_webdriver, setup_selenium
 
 def login(user_email_address,
           user_password,
