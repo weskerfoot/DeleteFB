@@ -1,25 +1,19 @@
+from ..exceptions import UnknownOSException
+from .common import NO_CHROME_DRIVER
+from clint.textui import puts, colored
+from selenium import webdriver
+from urllib.request import urlretrieve
+
+import os, sys, stat, platform
+import progressbar
 import re
 import zipfile
-import os, sys, stat, platform
-from urllib.request import urlretrieve
-from collections import namedtuple
 
-from clint.textui import puts, colored
-import progressbar
-
-from selenium import webdriver
-
-from .common import NO_CHROME_DRIVER
-from ..exceptions import UnknownOSException
-
-
-_ = namedtuple('WebDrivers', 'mac linux windows')
-drivers = ['https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_mac64.zip',
-           'https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_linux64.zip',
-           'https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_win32.zip'
-           ]
-WebDriver = _(drivers[0], drivers[1], drivers[2])
-
+chrome_drivers = {
+    "Windows" : "https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_win32.zip",
+    "Darwin" : "https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_mac64.zip",
+    "Linux" : "https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_linux64.zip"
+}
 
 def extract_zip(filename):
     """
@@ -71,14 +65,8 @@ def get_webdriver():
     else:
         # Download it according to the current machine
 
-        os_platform = platform.system()
-        if os_platform == 'Darwin':
-            chrome_webdriver = WebDriver.mac
-        elif os_platform == 'Linux':
-            chrome_webdriver = WebDriver.linux
-        elif os_platform == 'Windows':
-            chrome_webdriver = WebDriver.windows
-        else:
+        chrome_webdriver = chrome_drivers.get(platform.system(), False)
+        if not chrome_webdriver:
             raise UnknownOSException("Unknown Operating system platform")
 
         global total_size

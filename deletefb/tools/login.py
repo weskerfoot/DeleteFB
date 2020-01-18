@@ -1,9 +1,8 @@
+from .chrome_driver import get_webdriver, setup_selenium
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 
 import time
-
-from .chrome_driver import get_webdriver, setup_selenium
 
 def login(user_email_address,
           user_password,
@@ -52,14 +51,9 @@ def login(user_email_address,
     login_button = "loginbutton"
     approvals_code = "approvals_code"
 
-    emailelement = driver.find_element_by_name(email)
-    passwordelement = driver.find_element_by_name(password)
-
-    emailelement.send_keys(user_email_address)
-    passwordelement.send_keys(user_password)
-
-    loginelement = driver.find_element_by_id(login_button)
-    loginelement.click()
+    driver.find_element_by_name(email).send_keys(user_email_address)
+    driver.find_element_by_name(password).send_keys(user_password)
+    driver.find_element_by_id(login_button).click()
 
     # Defaults to no 2fa
     has_2fa = False
