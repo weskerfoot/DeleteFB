@@ -75,7 +75,8 @@ def delete_posts(driver,
 
                     click_button(driver, confirmation_button)
 
-                except SELENIUM_EXCEPTIONS:
+                except SELENIUM_EXCEPTIONS as e:
+                    print(e)
                     continue
                 else:
                     break
