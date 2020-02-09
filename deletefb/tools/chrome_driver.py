@@ -10,9 +10,9 @@ import re
 import zipfile
 
 chrome_drivers = {
-    "Windows" : "https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_win32.zip",
-    "Darwin" : "https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_mac64.zip",
-    "Linux" : "https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_linux64.zip"
+    "Windows" : "https://chromedriver.storage.googleapis.com/80.0.3987.16/chromedriver_win32.zip",
+    "Darwin" : "https://chromedriver.storage.googleapis.com/80.0.3987.16/chromedriver_mac64.zip",
+    "Linux" : "https://chromedriver.storage.googleapis.com/80.0.3987.16/chromedriver_linux64.zip"
 }
 
 def extract_zip(filename):
