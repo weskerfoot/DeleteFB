@@ -26,7 +26,11 @@ def delete_posts(driver,
 
     driver.get(user_profile_url)
 
+    retry_threshold = 0
     for _ in range(MAX_POSTS):
+        if retry_threshold >= settings["RETRY_THRESHOLD"]:
+            break
+
         post_button_sel = "_4xev"
 
         post_content_sel = "userContent"
@@ -36,6 +40,9 @@ def delete_posts(driver,
 
         with archiver("wall") as archive_wall_post:
             while True:
+                if retry_threshold >= settings["RETRY_THRESHOLD"]:
+                    break
+
                 try:
                     timeline_element = driver.find_element_by_class_name(post_button_sel)
 
@@ -67,15 +74,18 @@ def delete_posts(driver,
                             continue
 
                     if not delete_button:
+                        retry_threshold += 1
                         print("Could not find anything to delete")
                         break
+                    else:
+                        retry_threshold = 0
 
                     click_button(driver, delete_button)
                     confirmation_button = driver.find_element_by_class_name("layerConfirm")
 
                     click_button(driver, confirmation_button)
-
                 except SELENIUM_EXCEPTIONS as e:
+                    retry_threshold += 1
                     print(e)
                     continue
                 else:

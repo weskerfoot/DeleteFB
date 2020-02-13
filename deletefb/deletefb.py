@@ -6,6 +6,7 @@ from .tools.login import login
 from .tools.wall import delete_posts
 from .tools.conversations import traverse_conversations
 from .tools.comments import delete_comments
+from .tools.env_variables import EnvParser
 
 import argparse
 import getpass
@@ -13,8 +14,18 @@ import sys
 
 LOG = logger("deletefb")
 
+
 def run_delete():
     parser = argparse.ArgumentParser()
+    env_parser = EnvParser()
+
+    parser.add_argument(
+        "--help-env",
+        action="store_true",
+        dest="help_env",
+        default=False,
+        help="Print help about environment variables"
+    )
 
     parser.add_argument(
         "-M",
@@ -30,7 +41,7 @@ def run_delete():
     parser.add_argument(
         "-E",
         "--email",
-        required=True,
+        required='--help-env' not in sys.argv,
         dest="email",
         type=str,
         help="Your email address associated with the account"
@@ -48,7 +59,7 @@ def run_delete():
     parser.add_argument(
         "-U",
         "--profile-url",
-        required=True,
+        required='--help-env' not in sys.argv,
         dest="profile_url",
         type=str,
         help="The link to your Facebook profile, e.g. https://www.facebook.com/your.name"
@@ -99,9 +110,23 @@ def run_delete():
         help="Optional path to the Google Chrome (or Chromium) binary"
     )
 
+    env_parser.add_argument(
+        "DELETEFB_RETRY_THRESHOLD",
+        default=5,
+        dest="retry_threshold",
+        type=int,
+        help="Number of refreshes to ensure your wall is empty before quitting"
+    )
+
     args = parser.parse_args()
+    env = env_parser.parse_args()
+
+    if args.help_env:
+        env_parser.print_help()
+        sys.exit(0)
 
     settings["ARCHIVE"] = not args.archive_off
+    settings["RETRY_THRESHOLD"] = env.retry_threshold
 
     if args.year and args.mode not in ("wall", "conversations"):
         parser.error("The --year option is not supported in this mode")
@@ -132,6 +157,7 @@ def run_delete():
     else:
         print("Please enter a valid mode")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     run_delete()
