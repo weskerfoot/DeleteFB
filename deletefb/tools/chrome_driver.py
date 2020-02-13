@@ -2,17 +2,18 @@ from ..exceptions import UnknownOSException
 from .common import NO_CHROME_DRIVER
 from clint.textui import puts, colored
 from selenium import webdriver
-from urllib.request import urlretrieve
 
 import os, sys, stat, platform
 import progressbar
 import re
 import zipfile
+import requests
+
 
 chrome_drivers = {
-    "Windows" : "https://chromedriver.storage.googleapis.com/80.0.3987.16/chromedriver_win32.zip",
-    "Darwin" : "https://chromedriver.storage.googleapis.com/80.0.3987.16/chromedriver_mac64.zip",
-    "Linux" : "https://chromedriver.storage.googleapis.com/80.0.3987.16/chromedriver_linux64.zip"
+    "Windows" : "https://chromedriver.storage.googleapis.com/{0}/chromedriver_win32.zip",
+    "Darwin" : "https://chromedriver.storage.googleapis.com/{0}/chromedriver_mac64.zip",
+    "Linux" : "https://chromedriver.storage.googleapis.com/{0}/chromedriver_linux64.zip"
 }
 
 def extract_zip(filename):
@@ -69,36 +70,32 @@ def get_webdriver():
         if not chrome_webdriver:
             raise UnknownOSException("Unknown Operating system platform")
 
-        global total_size
+        file_name = chrome_webdriver.split('/')[-1]
+        try:
+            r = requests.get('https://chromedriver.storage.googleapis.com/LATEST_RELEASE')
+            r.raise_for_status()
+            latest_release = r.text
+            puts(colored.yellow("Downloading Chrome Webdriver {0}".format(latest_release)))
 
-        def show_progress(*res):
-            global total_size
-            pbar = None
-            downloaded = 0
-            block_num, block_size, total_size = res
-
-            if not pbar:
+            with open(file_name, 'wb') as f:
+                r = requests.get(chrome_webdriver.format(latest_release), stream=True)
+                r.raise_for_status()
+                total_size = int(r.headers['Content-Length'])
                 pbar = progressbar.ProgressBar(maxval=total_size)
                 pbar.start()
-            downloaded += block_num * block_size
-
-            if downloaded < total_size:
-                pbar.update(downloaded)
-            else:
+                for chunk in r.iter_content(16384):
+                    pbar.update(f.write(chunk))
                 pbar.finish()
 
-        puts(colored.yellow("Downloading Chrome Webdriver"))
-        file_name = chrome_webdriver.split('/')[-1]
-        response = urlretrieve(chrome_webdriver, file_name, show_progress)
-
-        if int(response[1].get('Content-Length')) == total_size:
             puts(colored.green(f"DONE!"))
-
             return "{0}/{1}".format(os.getcwd(), extract_zip(file_name))
-
-        else:
+        except Exception as e:
             puts(colored.red("An error Occurred While trying to download the driver."))
+            print(e)
             # remove the downloaded file and exit
-            os.remove(file_name)
+            try:
+                os.remove(file_name)
+            except FileNotFoundError:
+                pass
             sys.stderr.write(NO_CHROME_DRIVER)
             sys.exit(1)
