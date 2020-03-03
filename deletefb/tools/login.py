@@ -40,7 +40,7 @@ def login(user_email_address,
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('log-level=2')
 
-    driver_path = get_webdriver()
+    driver_path = get_webdriver(chrome_binary_path)
     driver = setup_selenium(driver_path, chrome_options)
     driver.implicitly_wait(10)
 
