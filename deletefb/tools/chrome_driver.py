@@ -1,4 +1,4 @@
-from ..exceptions import UnknownOSException
+from ..exceptions import UnknownOSException, ChromeError
 from .common import NO_CHROME_DRIVER
 from clint.textui import puts, colored
 from selenium import webdriver
@@ -10,6 +10,7 @@ import os, sys, stat, platform
 import progressbar
 import re
 import zipfile
+import requests
 
 def extract_zip(filename):
     """
@@ -41,18 +42,27 @@ def setup_selenium(driver_path, options):
     # Configures selenium to use a custom path
     return webdriver.Chrome(executable_path=driver_path, options=options)
 
-# TODO Merge these two into one
+def parse_version(output):
+    """
+    Attempt to extract version number from chrome version string.
+    """
+    return [c for c in re.split('([0-9]+)\.?', output.decode("utf-8")) if all(d.isdigit() for d in c) and c][0]
+
 def get_chrome_version(chrome_binary_path=None):
+    """
+    Extract the chrome major version.
+    """
     driver_locations = [which(loc) for loc in ["google-chrome", "google-chrome-stable", "chromium", "chrome.exe"]]
 
     for location in driver_locations:
+        print(location)
         if location:
-            version = check_output([location, "--version"]).strip()
-            # TODO need to reliably parse this output somehow
+            return parse_version(check_output([location, "--version"]).strip())
+    return None
 
 def construct_driver_url(chrome_binary_path=None):
     """
-    Construct a URL to download the Chrome Driver
+    Construct a URL to download the Chrome Driver.
     """
 
     platform_string = platform.system()
@@ -61,6 +71,15 @@ def construct_driver_url(chrome_binary_path=None):
         "Darwin" : "https://chromedriver.storage.googleapis.com/{0}/chromedriver_mac64.zip",
         "Linux" : "https://chromedriver.storage.googleapis.com/{0}/chromedriver_linux64.zip"
     }
+
+    version = get_chrome_version()
+
+    if version is None:
+        raise ChromeError("Chrome version not found")
+
+    latest_release_url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_{0}".format(version)
+
+    return chrome_drivers.get(platform_string).format(requests.get(latest_release_url).text)
 
     # First, construct a LATEST_RELEASE URL using Chrome's major version number.
     # For example, with Chrome version 73.0.3683.86, use URL "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_73".
