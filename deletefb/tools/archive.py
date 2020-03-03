@@ -49,21 +49,32 @@ class Archive:
             self._bloom_filter.add(content.name)
         return
 
+
+class FakeArchive:
+    def archive(self, content):
+        """
+        Do not archive an object
+        """
+        return
+
+
 @contextmanager
 def archiver(archive_type):
+    if not settings["ARCHIVE"]:
+        yield FakeArchive()
+    else:
+        archive_file = open(
+            str((Path(".") / Path(archive_type).name).with_suffix(".log.{0}".format(time()))),
+            mode="ta",
+            buffering=1
+        )
 
-    archive_file = open(
-        str((Path(".") / Path(archive_type).name).with_suffix(".log.{0}".format(time()))),
-        mode="ta",
-        buffering=1
-    )
+        archiver_instance = Archive(
+            archive_type=archive_type,
+            archive_file=archive_file
+        )
 
-    archiver_instance = Archive(
-        archive_type=archive_type,
-        archive_file=archive_file
-    )
-
-    try:
-        yield archiver_instance
-    finally:
-        archive_file.close()
+        try:
+            yield archiver_instance
+        finally:
+            archive_file.close()
