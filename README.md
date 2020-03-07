@@ -17,6 +17,10 @@ online presence and not have to worry about what you wrote from years ago.
 Personally, I did this so I would feel less attached to my Facebook profile
 (and hence feel the need to use it less).
 
+## Dependencies
+- This tool requires at least Python 3.6 in order to run.
+- A recent copy of Chrome or Chromium installed and available in your `$PATH`
+
 ## Installation
 You have several options to run it.
 1) Install from PyPI with `pip3 install --user delete-facebook-posts` (recommended you do this in a virtualenv to avoid incompatibilities)
