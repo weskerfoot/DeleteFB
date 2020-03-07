@@ -29,7 +29,8 @@ setuptools.setup(
         "lxml",
         "pendulum",
         "clint",
-        "progressbar"
+        "progressbar",
+        "appdirs"
     ],
     classifiers= [
         "Programming Language :: Python :: 3",
