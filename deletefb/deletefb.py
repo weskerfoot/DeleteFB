@@ -6,6 +6,7 @@ from .tools.login import login
 from .tools.wall import delete_posts
 from .tools.conversations import traverse_conversations
 from .tools.comments import delete_comments
+from .quit_driver import quit_driver_and_reap_children
 
 import argparse
 import getpass
@@ -116,22 +117,26 @@ def run_delete():
         chrome_binary_path=args.chromebin
     )
 
-    if args.mode == "wall":
-        delete_posts(
-            driver,
-            args.profile_url,
-            year=args.year
-        )
+    try:
+        if args.mode == "wall":
+            delete_posts(
+                driver,
+                args.profile_url,
+                year=args.year
+            )
 
-    elif args.mode == "unlike_pages":
-        unlike_pages(driver, args.profile_url)
+        elif args.mode == "unlike_pages":
+            unlike_pages(driver, args.profile_url)
 
-    elif args.mode == "conversations":
-        traverse_conversations(driver, year=args.year)
+        elif args.mode == "conversations":
+            traverse_conversations(driver, year=args.year)
 
-    else:
-        print("Please enter a valid mode")
-        sys.exit(1)
+        else:
+            print("Please enter a valid mode")
+            sys.exit(1)
+    except:
+        if driver:
+            quit_driver_and_reap_children(driver)
 
 if __name__ == "__main__":
     run_delete()
