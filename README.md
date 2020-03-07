@@ -25,6 +25,9 @@ git+https://github.com/weskerfoot/DeleteFB.git`
 3) Set up a Python virtualenv, activate it, and run `pip3 install -r requirements.txt`, then you can just run `python -m deletefb.deletefb` in the DeleteFB directory.
 4) Use the docker image (experimental) by running `make` after checking this repository out with git. There is also an image built and published automatically at `wjak56/deletefb:latest`
 
+## Chromedriver
+The tool will attempt to detect the version of Chrome that you have installed and download the appropriate chromedriver. It is possible that it might fail to find your chrome version if you are running on Windows. If that is the case, please try running the docker version.
+
 ## How To Use It
 ```
 usage: deletefb [-h] [-M {wall,unlike_pages,conversations}] -E EMAIL [-P PASSWORD] -U PROFILE_URL [-F TWO_FACTOR_TOKEN] [-H] [--no-archive] [-Y YEAR]
