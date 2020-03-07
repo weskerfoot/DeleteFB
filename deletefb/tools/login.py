@@ -1,4 +1,4 @@
-from .chrome_driver import get_webdriver, setup_selenium
+from .chrome_driver import setup_selenium
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 from ..quit_driver import quit_driver_and_reap_children
@@ -41,8 +41,7 @@ def login(user_email_address,
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('log-level=2')
 
-    driver_path = get_webdriver(chrome_binary_path)
-    driver = setup_selenium(driver_path, chrome_options)
+    driver = setup_selenium(chrome_options, chrome_binary_path)
     try:
         driver.implicitly_wait(10)
 

@@ -7,6 +7,7 @@ from subprocess import check_output
 from urllib.request import urlretrieve
 from appdirs import AppDirs
 from ..version import version
+from os.path import exists
 
 import os, sys, stat, platform
 import progressbar
@@ -22,12 +23,19 @@ try:
 except FileExistsError:
     pass
 
-def extract_zip(filename):
+def extract_zip(filename, chrome_maj_version):
     """
     Uses zipfile package to extract a single zipfile
     :param filename:
     :return: new filename
     """
+
+    # Remove any leftover unversioned chromedriver
+    try:
+        os.remove(f"{cache_dir}/chromedriver")
+    except FileNotFoundError:
+        pass
+
     try:
         _file = zipfile.ZipFile(filename, 'r')
     except FileNotFoundError:
@@ -35,10 +43,13 @@ def extract_zip(filename):
         sys.exit(1)
 
     # Save the name of the new file
-    new_file_name = f"{cache_dir}/{_file.namelist()[0]}"
+    new_file_name = f"{cache_dir}/{_file.namelist()[0] + chrome_maj_version}"
 
     # Extract the file and make it executable
     _file.extractall(path=cache_dir)
+
+    # Rename the filename to a versioned one
+    os.rename(f"{cache_dir}/chromedriver", f"{cache_dir}/chromedriver{chrome_maj_version}")
 
     driver_stat = os.stat(new_file_name)
     os.chmod(new_file_name, driver_stat.st_mode | stat.S_IEXEC)
@@ -48,8 +59,10 @@ def extract_zip(filename):
     return new_file_name
 
 
-def setup_selenium(driver_path, options):
+def setup_selenium(options, chrome_binary_path):
     # Configures selenium to use a custom path
+    driver_path = get_webdriver(chrome_binary_path)
+
     return webdriver.Chrome(executable_path=driver_path, options=options)
 
 def parse_version(output):
@@ -88,7 +101,7 @@ def construct_driver_url(chrome_binary_path=None):
 
     latest_release_url = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_{0}".format(version)
 
-    return chrome_drivers.get(platform_string).format(requests.get(latest_release_url).text)
+    return version, chrome_drivers.get(platform_string).format(requests.get(latest_release_url).text)
 
     # First, construct a LATEST_RELEASE URL using Chrome's major version number.
     # For example, with Chrome version 73.0.3683.86, use URL "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_73".
@@ -104,57 +117,47 @@ def get_webdriver(chrome_binary_path):
      If Not, Download it.
     """
 
-    webdriver_regex = re.compile('chromedriver')
+    # Download it according to the current machine
+    chrome_maj_version, chrome_webdriver = construct_driver_url(chrome_binary_path)
 
-    web_driver = list(filter(webdriver_regex.match, cache_dir))
+    driver_path = f"{cache_dir}/chromedriver{chrome_maj_version}"
 
+    if exists(driver_path):
+        return driver_path
 
-    if web_driver:
-        # check if a extracted copy already exists
-        if not os.path.isfile(f"{cache_dir}/chromedriver"):
-            # Extract file
-            extract_zip(web_driver[0])
+    if not chrome_webdriver:
+        raise UnknownOSException("Unknown Operating system platform")
 
-        return "{0}/chromedriver".format(cache_dir)
+    global total_size
+
+    def show_progress(*res):
+        global total_size
+        pbar = None
+        downloaded = 0
+        block_num, block_size, total_size = res
+
+        if not pbar:
+            pbar = progressbar.ProgressBar(maxval=total_size)
+            pbar.start()
+        downloaded += block_num * block_size
+
+        if downloaded < total_size:
+            pbar.update(downloaded)
+        else:
+            pbar.finish()
+
+    puts(colored.yellow("Downloading Chrome Webdriver"))
+    file_name = f"{cache_dir}/{chrome_webdriver.split('/')[-1]}"
+    response = urlretrieve(chrome_webdriver, file_name, show_progress)
+
+    if int(response[1].get("Content-Length")) == total_size:
+        puts(colored.green("Completed downloading the Chrome Driver."))
+
+        return extract_zip(file_name, chrome_maj_version)
 
     else:
-        # Download it according to the current machine
-
-        chrome_webdriver = construct_driver_url(chrome_binary_path)
-
-        if not chrome_webdriver:
-            raise UnknownOSException("Unknown Operating system platform")
-
-        global total_size
-
-        def show_progress(*res):
-            global total_size
-            pbar = None
-            downloaded = 0
-            block_num, block_size, total_size = res
-
-            if not pbar:
-                pbar = progressbar.ProgressBar(maxval=total_size)
-                pbar.start()
-            downloaded += block_num * block_size
-
-            if downloaded < total_size:
-                pbar.update(downloaded)
-            else:
-                pbar.finish()
-
-        puts(colored.yellow("Downloading Chrome Webdriver"))
-        file_name = f"{cache_dir}/{chrome_webdriver.split('/')[-1]}"
-        response = urlretrieve(chrome_webdriver, file_name, show_progress)
-
-        if int(response[1].get("Content-Length")) == total_size:
-            puts(colored.green("Completed downloading the Chrome Driver."))
-
-            return extract_zip(file_name)
-
-        else:
-            puts(colored.red("An error Occurred While trying to download the driver."))
-            # remove the downloaded file and exit
-            os.remove(file_name)
-            sys.stderr.write(NO_CHROME_DRIVER)
-            sys.exit(1)
+        puts(colored.red("An error Occurred While trying to download the driver."))
+        # remove the downloaded file and exit
+        os.remove(file_name)
+        sys.stderr.write(NO_CHROME_DRIVER)
+        sys.exit(1)
