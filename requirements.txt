@@ -1,3 +1,5 @@
+appdirs==1.4.3
+args==0.1.0
 attrs==19.1.0
 bitarray==0.9.3
 bleach==3.1.1

@@ -5,12 +5,22 @@ from selenium import webdriver
 from shutil import which
 from subprocess import check_output
 from urllib.request import urlretrieve
+from appdirs import AppDirs
+from ..version import version
 
 import os, sys, stat, platform
 import progressbar
 import re
 import zipfile
 import requests
+import pathlib
+
+cache_dir = AppDirs("DeleteFB", version=version).user_cache_dir
+
+try:
+    pathlib.Path(cache_dir).mkdir(parents=True, exist_ok=True)
+except FileExistsError:
+    pass
 
 def extract_zip(filename):
     """
@@ -25,10 +35,10 @@ def extract_zip(filename):
         sys.exit(1)
 
     # Save the name of the new file
-    new_file_name = _file.namelist()[0]
+    new_file_name = f"{cache_dir}/{_file.namelist()[0]}"
 
     # Extract the file and make it executable
-    _file.extractall()
+    _file.extractall(path=cache_dir)
 
     driver_stat = os.stat(new_file_name)
     os.chmod(new_file_name, driver_stat.st_mode | stat.S_IEXEC)
@@ -55,7 +65,6 @@ def get_chrome_version(chrome_binary_path=None):
     driver_locations = [which(loc) for loc in ["google-chrome", "google-chrome-stable", "chromium", "chrome.exe"]]
 
     for location in driver_locations:
-        print(location)
         if location:
             return parse_version(check_output([location, "--version"]).strip())
     return None
@@ -94,17 +103,19 @@ def get_webdriver(chrome_binary_path):
      Ensure a webdriver is available
      If Not, Download it.
     """
-    cwd = os.listdir(os.getcwd())
+
     webdriver_regex = re.compile('chromedriver')
-    web_driver = list(filter(webdriver_regex.match, cwd))
+
+    web_driver = list(filter(webdriver_regex.match, cache_dir))
+
 
     if web_driver:
         # check if a extracted copy already exists
-        if not os.path.isfile('chromedriver'):
+        if not os.path.isfile(f"{cache_dir}/chromedriver"):
             # Extract file
             extract_zip(web_driver[0])
 
-        return "{0}/chromedriver".format(os.getcwd())
+        return "{0}/chromedriver".format(cache_dir)
 
     else:
         # Download it according to the current machine
@@ -133,13 +144,13 @@ def get_webdriver(chrome_binary_path):
                 pbar.finish()
 
         puts(colored.yellow("Downloading Chrome Webdriver"))
-        file_name = chrome_webdriver.split('/')[-1]
+        file_name = f"{cache_dir}/{chrome_webdriver.split('/')[-1]}"
         response = urlretrieve(chrome_webdriver, file_name, show_progress)
 
         if int(response[1].get("Content-Length")) == total_size:
             puts(colored.green("Completed downloading the Chrome Driver."))
 
-            return "{0}/{1}".format(os.getcwd(), extract_zip(file_name))
+            return extract_zip(file_name)
 
         else:
             puts(colored.red("An error Occurred While trying to download the driver."))
