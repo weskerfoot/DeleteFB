@@ -60,10 +60,13 @@ def extract_zip(filename, chrome_maj_version):
 
 
 def setup_selenium(options, chrome_binary_path):
-    # Configures selenium to use a custom path
-    driver_path = get_webdriver(chrome_binary_path)
-
-    return webdriver.Chrome(executable_path=driver_path, options=options)
+    try:
+        # try letting Selenium find the driver (in PATH)
+        return webdriver.Chrome(options=options)
+    except WebDriverException:
+        # Configures selenium to use a custom path
+        driver_path = get_webdriver(chrome_binary_path)
+        return webdriver.Chrome(executable_path=driver_path, options=options)
 
 def parse_version(output):
     """
