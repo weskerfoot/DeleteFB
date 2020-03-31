@@ -134,7 +134,8 @@ def run_delete():
         else:
             print("Please enter a valid mode")
             sys.exit(1)
-    except:
+    except BaseException as e:
+        print(e)
         if driver:
             quit_driver_and_reap_children(driver)
 

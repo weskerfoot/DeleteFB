@@ -63,7 +63,8 @@ def delete_posts(driver,
                         try:
                             delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"{0}\"]".format(button_type))
                             break
-                        except SELENIUM_EXCEPTIONS:
+                        except SELENIUM_EXCEPTIONS as e:
+                            print(e)
                             continue
 
                     if not delete_button:
