@@ -1,5 +1,6 @@
 .envrc
 __pycache__
+*.pyc
 venv
 deletefb.log
 test.sh

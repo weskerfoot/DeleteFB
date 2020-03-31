@@ -99,5 +99,6 @@ def login(user_email_address,
             time.sleep(5)
 
         return driver
-    except:
+    except BaseException as e:
+        print('An exception occurred: {}'.format(e))
         quit_driver_and_reap_children(driver)

@@ -65,8 +65,7 @@ optional arguments:
   * On MacOS, it will be available via brew, with the following commands:
 
     ```
-    brew tap homebrew/cask;
-    brew cask install chromedriver
+    brew install chromedriver
     ```
 
 * Run `deletefb -E 'youremail@example.org' -P 'yourfacebookpassword' -U 'https://www.facebook.com/your.profile.url'`
