@@ -78,7 +78,7 @@ def get_chrome_version(chrome_binary_path=None):
     """
     Extract the chrome major version.
     """
-    driver_locations = [which(loc) for loc in ["google-chrome", "google-chrome-stable", "chromium", "chrome.exe"]]
+    driver_locations = [which(loc) for loc in ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "chrome.exe"]]
 
     for location in driver_locations:
         if location:
