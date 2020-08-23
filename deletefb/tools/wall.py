@@ -26,21 +26,35 @@ def delete_posts(driver,
 
     driver.get(user_profile_url)
 
-    for _ in range(MAX_POSTS):
-        post_button_sel = "_4xev"
+    finished = False
 
-        post_content_sel = "userContent"
-        post_timestamp_sel = "timestampContent"
+    with archiver("wall") as archive_wall_post:
+        for _ in range(MAX_POSTS):
+            if finished:
+                break
+            post_button_sel = "_4s19"
 
-        button_types = ["FeedDeleteOption", "HIDE_FROM_TIMELINE", "UNTAG"]
+            post_content_sel = "userContent"
+            post_timestamp_sel = "timestampContent"
 
-        with archiver("wall") as archive_wall_post:
+            confirmation_button_exp = "//div[contains(@data-sigil, 'undo-content')]//*/a[contains(@href, 'direct_action_execute')]"
+
+            button_types = ["Delete post", "Remove Tag", "Hide from timeline"]
+
             while True:
                 try:
-                    timeline_element = driver.find_element_by_class_name(post_button_sel)
+                    try:
+                        timeline_element = driver.find_element_by_xpath("//div[@data-sigil='story-popup-causal-init']/a")
+                    except SELENIUM_EXCEPTIONS:
+                        print("Could not find any posts")
+                        finished = True
+                        break
 
-                    post_content_element = driver.find_element_by_class_name(post_content_sel)
-                    post_content_ts = driver.find_element_by_class_name(post_timestamp_sel)
+                    post_content_element = driver.find_element_by_xpath("//article/div[@class='story_body_container']/div")
+                    post_content_ts = driver.find_element_by_xpath("//article//*/header//a[contains(@href, 'story')]")
+
+                    if not (post_content_element or post_content_ts):
+                        break
 
                     # Archive the post
                     archive_wall_post.archive(
@@ -53,15 +67,15 @@ def delete_posts(driver,
                     actions = ActionChains(driver)
                     actions.move_to_element(timeline_element).click().perform()
 
-                    wait_xpath(driver, "//*[@id='feed_post_menu']/..")
-
-                    menu = driver.find_element_by_xpath("//*[@id='feed_post_menu']/..")
+                    wait_xpath(driver, "//*[contains(@data-sigil, 'removeStoryButton')]")
 
                     delete_button = None
 
                     for button_type in button_types:
                         try:
-                            delete_button = menu.find_element_by_xpath("//a[@data-feed-option-name=\"{0}\"]".format(button_type))
+                            delete_button = driver.find_element_by_xpath("//*[text()='{0}']".format(button_type))
+                            if not delete_button.is_displayed():
+                                continue
                             break
                         except SELENIUM_EXCEPTIONS as e:
                             print(e)
@@ -72,8 +86,10 @@ def delete_posts(driver,
                         break
 
                     click_button(driver, delete_button)
-                    confirmation_button = driver.find_element_by_class_name("layerConfirm")
+                    wait_xpath(driver, confirmation_button_exp)
+                    confirmation_button = driver.find_element_by_xpath(confirmation_button_exp)
 
+                    print(confirmation_button)
                     click_button(driver, confirmation_button)
 
                 except SELENIUM_EXCEPTIONS as e:
