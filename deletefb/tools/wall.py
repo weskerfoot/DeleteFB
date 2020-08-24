@@ -39,6 +39,10 @@ def delete_posts(driver,
 
             confirmation_button_exp = "//div[contains(@data-sigil, 'undo-content')]//*/a[contains(@href, 'direct_action_execute')]"
 
+            # Cannot return a text node, so it returns the parent.
+            # Tries to be pretty resilient against DOM re-organizations
+            timestamp_exp = "//article//*/header//*/div/a[contains(@href, 'story_fbid')]//text()/.."
+
             button_types = ["Delete post", "Remove Tag", "Hide from timeline"]
 
             while True:
@@ -51,7 +55,7 @@ def delete_posts(driver,
                         break
 
                     post_content_element = driver.find_element_by_xpath("//article/div[@class='story_body_container']/div")
-                    post_content_ts = driver.find_element_by_xpath("//article//*/header//a[contains(@href, 'story')]")
+                    post_content_ts = driver.find_element_by_xpath(timestamp_exp)
 
                     if not (post_content_element or post_content_ts):
                         break
@@ -67,10 +71,13 @@ def delete_posts(driver,
                     actions = ActionChains(driver)
                     actions.move_to_element(timeline_element).click().perform()
 
+                    # Wait until the buttons show up
                     wait_xpath(driver, "//*[contains(@data-sigil, 'removeStoryButton')]")
 
                     delete_button = None
 
+                    # Search for visible buttons in priority order
+                    # Delete -> Untag -> Hide
                     for button_type in button_types:
                         try:
                             delete_button = driver.find_element_by_xpath("//*[text()='{0}']".format(button_type))
