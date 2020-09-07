@@ -6,6 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 from pendulum import now
 from json import loads
+from time import sleep
 
 import lxml.html as lxh
 
@@ -29,12 +30,13 @@ def get_conversations(driver):
             date = None
 
             if url and "messages/read" in url:
-
-                date = convo.find_element_by_xpath("../../..//abbr").text
-                conversation_name = convo.find_element_by_xpath("../../../div/div/header/h3").text.strip()
-
-                assert(conversation_name)
-                assert(url)
+                try:
+                    date = convo.find_element_by_xpath("../../..//abbr").text
+                    conversation_name = convo.find_element_by_xpath("../../../div/div/header/h3").text.strip()
+                    assert(conversation_name)
+                    assert(url)
+                except (SELENIUM_EXCEPTIONS + (AssertionError,)):
+                    continue
 
                 conversations.append(
                     Conversation(
@@ -49,7 +51,10 @@ def get_conversations(driver):
                         find_element_by_xpath("a").
                         get_attribute("href"))
 
-        except SELENIUM_EXCEPTIONS:
+            print("next_url", next_url)
+
+        except SELENIUM_EXCEPTIONS as e:
+            print(e)
             break
         if not next_url:
             break
