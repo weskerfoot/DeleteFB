@@ -73,9 +73,12 @@ def force_mobile(url):
     Force a url to use the mobile site.
     """
     parsed = urlparse.urlparse(url)
-    if parsed.netloc == "www.facebook.com":
-        return f"https://mobile.facebook.com{parsed.path}"
-    return url
+    return urlparse.urlunparse((parsed.scheme,
+                                "mobile.facebook.com",
+                                parsed.path,
+                                parsed.params,
+                                parsed.query,
+                                parsed.fragment))
 
 NO_CHROME_DRIVER = """
 You need to manually install the chromedriver for Selenium\n
