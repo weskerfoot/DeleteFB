@@ -1,6 +1,6 @@
 from ..types import Post
 from .archive import archiver
-from .common import SELENIUM_EXCEPTIONS, click_button, wait_xpath
+from .common import SELENIUM_EXCEPTIONS, click_button, wait_xpath, force_mobile
 from .config import settings
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -23,6 +23,8 @@ def delete_posts(driver,
 
     if year is not None:
         user_profile_url = "{0}/timeline?year={1}".format(user_profile_url, year)
+
+    user_profile_url = force_mobile(user_profile_url)
 
     driver.get(user_profile_url)
 

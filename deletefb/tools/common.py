@@ -12,6 +12,7 @@ import json
 import logging
 import logging.config
 import os
+import urllib.parse as urlparse
 
 SELENIUM_EXCEPTIONS = (
     NoSuchElementException,
@@ -67,6 +68,14 @@ def wait_xpath(driver, expr):
     except SELENIUM_EXCEPTIONS:
         return
 
+def force_mobile(url):
+    """
+    Force a url to use the mobile site.
+    """
+    parsed = urlparse.urlparse(url)
+    if parsed.netloc == "www.facebook.com":
+        return f"https://mobile.facebook.com{parsed.path}"
+    return url
 
 NO_CHROME_DRIVER = """
 You need to manually install the chromedriver for Selenium\n
