@@ -45,7 +45,7 @@ def delete_posts(driver,
             # Tries to be pretty resilient against DOM re-organizations
             timestamp_exp = "//article//*/header//*/div/a[contains(@href, 'story_fbid')]//text()/.."
 
-            button_types = ["Delete post", "Remove Tag", "Hide from timeline"]
+            button_types = ["Delete post", "Remove tag", "Hide from timeline"]
 
             while True:
                 try:
