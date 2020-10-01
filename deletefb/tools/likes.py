@@ -1,6 +1,6 @@
 from .archive import archiver
 from ..types import Page
-from .common import SELENIUM_EXCEPTIONS, logger, click_button
+from .common import SELENIUM_EXCEPTIONS, logger, click_button, wait_xpath, force_mobile, scroll_to, scroll_until_element_exists
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,17 +18,25 @@ def load_likes(driver, profile_url):
         None
     """
 
-    driver.get("{0}/likes_all".format(profile_url))
+    likes_link_xpath = "//div[normalize-space(text())='Likes']/../..//a[contains(@href, 'app_section')]"
 
-    wait = WebDriverWait(driver, 20)
+    all_likes_link_xpath = "//div[normalize-space(text())='All Likes']/../../../..//a[contains(@href, 'app_collection')]"
 
-    try:
-        wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".PageLikeButton"))
-        )
-    except SELENIUM_EXCEPTIONS:
-        LOG.exception("Traceback of load_likes")
-        return
+    driver.get(force_mobile("{0}/about".format(profile_url)))
+
+    scroll_until_element_exists(driver, "//div[text()='Likes']")
+
+    likes_link_el = driver.find_element_by_xpath(likes_link_xpath)
+
+    driver.get(likes_link_el.get_attribute("href"))
+
+    wait_xpath(driver, all_likes_link_xpath)
+
+    all_likes_link_el = driver.find_element_by_xpath(all_likes_link_xpath)
+
+    all_likes_link = all_likes_link_el.get_attribute("href")
+
+    driver.get(all_likes_link)
 
 def get_page_links(driver):
     """
@@ -39,8 +47,7 @@ def get_page_links(driver):
     Returns:
         List of URLs to pages
     """
-    pages = driver.find_elements_by_xpath("//li//div/div/a[contains(@class, 'lfloat')]")
-
+    pages = driver.find_elements_by_xpath("//header/..//a")
     return [page.get_attribute("href").replace("www", "mobile") for page in pages]
 
 def unlike_page(driver, url, archive=None):
@@ -60,7 +67,7 @@ def unlike_page(driver, url, archive=None):
 
     print("Unliking {0}".format(url))
 
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 5)
 
     try:
         wait.until(
@@ -70,19 +77,14 @@ def unlike_page(driver, url, archive=None):
         # Something went wrong with this page, so skip it
         return
 
-    button = driver.find_element_by_xpath("//*[text()='Liked']")
-
-    # Click the "Liked" button to open up "Unlike"
-    click_button(driver, button)
+    driver.find_element_by_xpath("//*[text()='Liked']/../../../..").click()
 
     wait.until(
         EC.presence_of_element_located((By.XPATH, "//*[text()='Unlike']"))
     )
 
     # There should be an "Unlike" button now, click it
-    unlike_button = driver.find_element_by_xpath("//*[text()='Unlike']/..")
-
-    click_button(driver, unlike_button)
+    driver.find_element_by_xpath("//*[text()='Unlike']/..").click()
 
     if archive:
         archive(Page(name=url))
