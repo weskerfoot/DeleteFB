@@ -2,6 +2,7 @@ from ..exceptions import UnknownOSException, ChromeError
 from .common import NO_CHROME_DRIVER
 from clint.textui import puts, colored
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from shutil import which
 from subprocess import check_output
 from urllib.request import urlretrieve
