@@ -22,7 +22,7 @@ def delete_posts(driver,
     """
 
     if year is not None:
-        user_profile_url = "{0}/timeline?year={1}".format(user_profile_url, year)
+        user_profile_url = "{0}/?year={1}".format(force_mobile(user_profile_url), year)
 
     user_profile_url = force_mobile(user_profile_url)
 
