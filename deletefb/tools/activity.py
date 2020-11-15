@@ -9,20 +9,19 @@ import time
 # Used as a threshold to avoid running forever
 MAX_POSTS = settings["MAX_POSTS"]
 
-def delete_posts(driver,
-                 user_profile_url):
+def delete_activity(driver,
+                    year=None):
     """
-    Deletes or hides all posts from the wall
+    Deletes or hides all activity related to posts.
 
     Args:
         driver: seleniumrequests.Chrome Driver instance
-        user_profile_url: str
         year: optional int YYYY year
     """
 
-    user_profile_url = force_mobile(user_profile_url)
+    driver.get("https://m.facebook.com/allactivity/?category_key=statuscluster")
 
-    driver.get(user_profile_url)
+    time.sleep(1000)
 
     finished = False
 
