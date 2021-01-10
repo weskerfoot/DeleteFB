@@ -1,9 +1,9 @@
 appdirs==1.4.3
 args==0.1.0
-attrs==19.1.0
+attrs==20.3.0
 bitarray==0.9.3
 bleach==3.1.4
-cattrs-3.8==0.9.1
+cattrs==1.1.2
 certifi==2018.11.29
 chardet==3.0.4
 clint==0.5.1
