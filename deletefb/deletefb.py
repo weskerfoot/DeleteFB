@@ -6,6 +6,7 @@ from .tools.login import login
 from .tools.wall import delete_posts
 from .tools.conversations import traverse_conversations
 from .tools.comments import delete_comments
+from .tools.activity import delete_activity
 from .quit_driver import quit_driver_and_reap_children
 
 import argparse
@@ -24,8 +25,8 @@ def run_delete():
         default="wall",
         dest="mode",
         type=str,
-        choices=["wall", "unlike_pages", "conversations"],
-        help="The mode you want to run in. Default is `wall' which deletes wall posts"
+        choices=["wall", "unlike_pages", "conversations", "activity"],
+        help="The mode you want to run in. Default is `wall' which deletes all wall posts"
     )
 
     parser.add_argument(
@@ -104,7 +105,7 @@ def run_delete():
 
     settings["ARCHIVE"] = not args.archive_off
 
-    if args.year and args.mode not in ("wall", "conversations"):
+    if args.year and args.mode not in ("activity", "conversations"):
         parser.error("The --year option is not supported in this mode")
 
     args_user_password = args.password or getpass.getpass('Enter your password: ')
@@ -122,8 +123,10 @@ def run_delete():
             delete_posts(
                 driver,
                 args.profile_url,
-                year=args.year
             )
+
+        elif args.mode == "activity":
+            delete_activity(driver, year=args.year)
 
         elif args.mode == "unlike_pages":
             unlike_pages(driver, args.profile_url)

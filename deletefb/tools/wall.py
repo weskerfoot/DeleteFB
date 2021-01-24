@@ -10,8 +10,7 @@ import time
 MAX_POSTS = settings["MAX_POSTS"]
 
 def delete_posts(driver,
-                 user_profile_url,
-                 year=None):
+                 user_profile_url):
     """
     Deletes or hides all posts from the wall
 
@@ -20,9 +19,6 @@ def delete_posts(driver,
         user_profile_url: str
         year: optional int YYYY year
     """
-
-    if year is not None:
-        user_profile_url = "{0}/timeline?year={1}".format(user_profile_url, year)
 
     user_profile_url = force_mobile(user_profile_url)
 
