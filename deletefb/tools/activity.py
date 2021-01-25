@@ -36,6 +36,9 @@ def get_timeslices(driver):
     slice_expr = "//header"
 
     wait_xpath(driver, slice_expr)
+
+    print("Loaded")
+
     for ts in driver.find_elements_by_xpath(slice_expr):
         if any(w in months for w in ts.text.strip().split()):
             yield ts
@@ -58,16 +61,35 @@ def delete_activity(driver,
 
     driver.get("https://m.facebook.com/allactivity/?category_key=statuscluster")
 
-    #print(get_load_more(driver))
+    if year is None:
+        print("Deleting all years")
+        years = [elem.text.strip() for elem in get_timeslices(driver)]
+    else:
+        years = [elem.text.strip() for elem in get_timeslices(driver) if year in elem.text.strip()]
 
     actions = ActionChains(driver)
 
-    for ts in get_timeslices(driver):
+    print(years)
+
+    for year in years:
+        year_elems = [y for y in get_timeslices(driver) if y.text.strip() == year]
+
+        if not year_elems:
+            raise ValueError("Non-existent year") # FIXME use a better exception
+
+        year_elem = year_elems[0]
+
         # Need to figure out how to ignore the ones with nothing in them
-        print(ts.text)
-        actions.move_to_element(ts)
+        print(f"Deleting activity from {year_elem.text}")
+
+        actions.move_to_element(year_elem)
+        year_elem.click()
+
         get_load_more(driver)
 
-    time.sleep(1000)
+        time.sleep(10)
+
+        driver.refresh()
+
 
     #with archiver("activity") as archive_wall_post:
