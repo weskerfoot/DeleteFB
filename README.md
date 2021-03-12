@@ -1,4 +1,6 @@
-Note: this currently only works for English language Facebook accounts, due to the lack of a usable API. Also, year by year deletion is currently broken. Feel free to fork or make pull requests.
+WARNING:
+This currently only works for English language Facebook accounts, due to the lack of a usable API.
+Also, year by year deletion is currently broken. Feel free to fork or make pull requests.
 
 ## Why?
 
