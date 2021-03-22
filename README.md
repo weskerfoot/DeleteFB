@@ -22,7 +22,7 @@ Personally, I did this so I would feel less attached to my Facebook profile
 (and hence feel the need to use it less).
 
 ## Dependencies
-- This tool requires at least Python 3.6 in order to run.
+- This tool requires at least Python 3.7 in order to run.
 - A recent copy of Chrome or Chromium installed and available in your `$PATH`
 
 ## Installation
@@ -61,7 +61,7 @@ optional arguments:
 ```
 
 * Make sure that you have a recent version of Python 3.x installed (preferably
-  3.6 or greater)
+  3.7 or greater)
 * Make sure that you have Google Chrome installed and that it is up to date
 * The tool will attempt to automatically install chromedriver for Selenium. See [here](https://sites.google.com/a/chromium.org/chromedriver/home) for an explanation of what the chromedriver does. You may have to manually install it if auto-install fails.
   * On Linux, it will be called something like `chromium-chromedriver` or just
