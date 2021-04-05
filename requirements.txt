@@ -14,7 +14,7 @@ pendulum==2.0.5
 pkginfo==1.5.0.1
 progressbar==2.5
 pybloom-live==3.0.0
-Pygments==2.4.2
+Pygments==2.7.4
 python-dateutil==2.8.0
 pytzdata==2019.2
 readme-renderer==24.0
