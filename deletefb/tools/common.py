@@ -78,7 +78,9 @@ def force_mobile(url):
     Force a url to use the mobile site.
     """
     parsed = urlparse.urlparse(url)
-    return urlparse.urlunparse((parsed.scheme,
+    # Ensure a protocol is given (needed by selenium).
+    scheme = parsed.scheme or "https"
+    return urlparse.urlunparse((scheme,
                                 "mobile.facebook.com",
                                 parsed.path,
                                 parsed.params,
