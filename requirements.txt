@@ -28,5 +28,5 @@ tldextract==2.2.0
 tqdm==4.32.2
 twine==1.13.0
 typing==3.7.4
-urllib3==1.25.8
+urllib3==1.26.5
 webencodings==0.5.1
